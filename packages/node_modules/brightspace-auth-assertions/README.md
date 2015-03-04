@@ -1,4 +1,6 @@
 # brightspace-auth-assertions
+[![Build
+Status](https://magnum.travis-ci.com/blee-d2l/node-auth-assertions.svg?token=ayc5reQ1Z16PZREzv2eW&branch=master)](https://magnum.travis-ci.com/blee-d2l/node-auth-assertions)
 
 ## Example
 
