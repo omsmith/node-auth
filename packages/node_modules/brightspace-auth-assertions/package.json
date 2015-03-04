@@ -15,9 +15,12 @@
   "author": "D2L Corporation",
   "license": "",
   "devDependencies": {
+    "chai": "^2.1.0",
     "jscs": "^1.11.3",
     "jshint": "^2.6.3",
     "mocha": "^2.1.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "inherits": "^2.0.1"
+  }
 }

@@ -1,5 +1,23 @@
 # brightspace-auth-assertions
 
+## Example
+
+```js
+const AssertionCompiler = require('brightspace-auth-assertions');
+
+const asserter = new AssertionCompiler()
+	.scope('valance', 'apps', 'manage').require()
+	.context(AssertionCompiler.contexts.tenant).require()
+	.compile();
+
+// ...
+
+server.on('request', function (req) {
+	const auth = getAuthInfo();
+	asserter(auth);
+});
+```
+
 ## Testing
 
 ```bash
