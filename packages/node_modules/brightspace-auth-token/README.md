@@ -19,7 +19,7 @@ function *authMiddleware (next) {
 // ...
 
 function *handleReq () {
-	if (this.auth.hasToken('valence', 'apps', 'manage')) {
+	if (this.auth.hasScope('valence', 'apps', 'manage')) {
 		// things so hard
 	}
 
