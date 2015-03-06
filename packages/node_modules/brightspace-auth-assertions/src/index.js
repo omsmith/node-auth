@@ -1,12 +1,8 @@
 'use strict';
 
-const inherits = require('inherits');
-
-const contexts = {
-	user: Symbol('ContextAssertion.User'),
-	tenant: Symbol('ContextAssertion.Tenant'),
-	global: Symbol('ContextAssertion.MultiTenant')
-};
+const
+	AuthToken = require('brightspace-auth-token'),
+	inherits = require('inherits');
 
 function AssertionCompiler () {
 	if (!(this instanceof AssertionCompiler)) {
@@ -34,9 +30,6 @@ AssertionCompiler.prototype.compile = function compileAssertions () {
 		}
 	};
 };
-
-module.exports = AssertionCompiler;
-module.exports.contexts = contexts;
 
 function AuthAssertion (compiler) {
 	if (!(this instanceof AuthAssertion)) {
@@ -86,38 +79,7 @@ function ScopeAssertion (compiler, broad, narrow, permission) {
 inherits(ScopeAssertion, AuthAssertion);
 
 ScopeAssertion.prototype._assert = function assertScope (token) {
-	let matched = false;
-
-	const scopeStrings = token.scope.replace(/https:\/\/api.brightspace.com\/auth\//g, '').split(' ');
-
-	for (let scopeString of scopeStrings) {
-		const scopeParts = scopeString.split(':');
-
-		const
-			broad = scopeParts[0],
-			narrow = scopeParts[1];
-
-		const broadMatched = '*' === broad || this.broad === broad;
-		if (this._require && !broadMatched) {
-			continue;
-		}
-
-		const narrowMatched = '*' === narrow || this.narrow === narrow;
-		if (this._require && !narrowMatched) {
-			continue;
-		}
-
-		const permissions = scopeParts[2].split('|');
-
-		for (let permission of permissions) {
-			const permissionMatched = '*' === permission || this.permission === permission;
-
-			if (permissionMatched) {
-				matched = true;
-				break;
-			}
-		}
-	}
+	let matched = token.hasScope(this.broad, this.narrow, this.permission);
 
 	if (this._require && !matched) {
 		throw new Error('Insufficient scope');
@@ -138,21 +100,17 @@ inherits(ContextAssertion, AuthAssertion);
 ContextAssertion.prototype._assert = function assertContext (token) {
 	let matched = false;
 
-	const
-		hasUser = 'string' === typeof token.sub,
-		hasTenant = 'string' === typeof token.tenantid;
-
 	switch (this.context) {
-		case contexts.user: {
-			matched = hasUser && hasTenant;
+		case AuthToken.contexts.User: {
+			matched = token.isUserContext();
 			break;
 		}
-		case contexts.tenant: {
-			matched = !hasUser && hasTenant;
+		case AuthToken.contexts.Tenant: {
+			matched = token.isTenantContext();
 			break;
 		}
-		case contexts.global: {
-			matched = !hasUser && !hasTenant;
+		case AuthToken.contexts.Global: {
+			matched = token.isGlobalContext();
 			break;
 		}
 	}
@@ -162,4 +120,5 @@ ContextAssertion.prototype._assert = function assertContext (token) {
 	}
 };
 
-
+module.exports = AssertionCompiler;
+module.exports.contexts = AuthToken.contexts;

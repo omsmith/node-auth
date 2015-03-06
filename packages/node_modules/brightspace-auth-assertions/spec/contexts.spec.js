@@ -2,7 +2,9 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+const
+	AuthToken = require('brightspace-auth-token'),
+	expect = require('chai').expect;
 
 const AssertionCompiler = require('../');
 
@@ -10,14 +12,16 @@ describe('context assertions', function () {
 	describe('user', function () {
 		it('should pass when there is a user and a tenant', function (done) {
 			const assertion = new AssertionCompiler()
-				.context(AssertionCompiler.contexts.user).require()
+				.context(AssertionCompiler.contexts.User).require()
 				.compile();
 
 			function makeAssertion () {
-				assertion({
+				const token = new AuthToken({
 					sub: '169',
 					tenantid: 'foozleberries'
 				});
+
+				assertion(token);
 			}
 
 			expect(makeAssertion).to.not.throw();
@@ -26,13 +30,15 @@ describe('context assertions', function () {
 
 		it('should throw when there is only a tenant', function (done) {
 			const assertion = new AssertionCompiler()
-				.context(AssertionCompiler.contexts.user).require()
+				.context(AssertionCompiler.contexts.User).require()
 				.compile();
 
 			function makeAssertion () {
-				assertion({
+				const token = new AuthToken({
 					tenantid: 'foozleberries'
 				});
+
+				assertion(token);
 			}
 
 			expect(makeAssertion).to.throw(/invalid context/i);
@@ -41,11 +47,13 @@ describe('context assertions', function () {
 
 		it('should throw when there is no user or tenant', function (done) {
 			const assertion = new AssertionCompiler()
-				.context(AssertionCompiler.contexts.user).require()
+				.context(AssertionCompiler.contexts.User).require()
 				.compile();
 
 			function makeAssertion () {
-				assertion({});
+				const token = new AuthToken({});
+
+				assertion(token);
 			}
 
 			expect(makeAssertion).to.throw(/invalid context/i);
@@ -56,14 +64,16 @@ describe('context assertions', function () {
 	describe('tenant', function () {
 		it('should throw when there is a user and a tenant', function (done) {
 			const assertion = new AssertionCompiler()
-				.context(AssertionCompiler.contexts.tenant).require()
+				.context(AssertionCompiler.contexts.Tenant).require()
 				.compile();
 
 			function makeAssertion () {
-				assertion({
+				const token = new AuthToken({
 					sub: '169',
 					tenantid: 'foozleberries'
 				});
+
+				assertion(token);
 			}
 
 			expect(makeAssertion).to.throw(/invalid context/i);
@@ -72,13 +82,15 @@ describe('context assertions', function () {
 
 		it('should pass when there is only a tenant', function (done) {
 			const assertion = new AssertionCompiler()
-				.context(AssertionCompiler.contexts.tenant).require()
+				.context(AssertionCompiler.contexts.Tenant).require()
 				.compile();
 
 			function makeAssertion () {
-				assertion({
+				const token = new AuthToken({
 					tenantid: 'foozleberries'
 				});
+
+				assertion(token);
 			}
 
 			expect(makeAssertion).to.not.throw();
@@ -87,11 +99,13 @@ describe('context assertions', function () {
 
 		it('should throw when there is no user or tenant', function (done) {
 			const assertion = new AssertionCompiler()
-				.context(AssertionCompiler.contexts.tenant).require()
+				.context(AssertionCompiler.contexts.Tenant).require()
 				.compile();
 
 			function makeAssertion () {
-				assertion({});
+				const token = new AuthToken({});
+
+				assertion(token);
 			}
 
 			expect(makeAssertion).to.throw(/invalid context/i);
@@ -102,14 +116,16 @@ describe('context assertions', function () {
 	describe('global', function () {
 		it('should throw when there is a user and a tenant', function (done) {
 			const assertion = new AssertionCompiler()
-				.context(AssertionCompiler.contexts.global).require()
+				.context(AssertionCompiler.contexts.Global).require()
 				.compile();
 
 			function makeAssertion () {
-				assertion({
+				const token = new AuthToken({
 					sub: '169',
 					tenantid: 'foozleberries'
 				});
+
+				assertion(token);
 			}
 
 			expect(makeAssertion).to.throw(/invalid context/i);
@@ -118,13 +134,15 @@ describe('context assertions', function () {
 
 		it('should throw when there is only a tenant', function (done) {
 			const assertion = new AssertionCompiler()
-				.context(AssertionCompiler.contexts.global).require()
+				.context(AssertionCompiler.contexts.Global).require()
 				.compile();
 
 			function makeAssertion () {
-				assertion({
+				const token = new AuthToken({
 					tenantid: 'foozleberries'
 				});
+
+				assertion(token);
 			}
 
 			expect(makeAssertion).to.throw(/invalid context/i);
@@ -133,11 +151,13 @@ describe('context assertions', function () {
 
 		it('should pass when there is no user or tenant', function (done) {
 			const assertion = new AssertionCompiler()
-				.context(AssertionCompiler.contexts.global).require()
+				.context(AssertionCompiler.contexts.Global).require()
 				.compile();
 
 			function makeAssertion () {
-				assertion({});
+				const token = new AuthToken({});
+
+				assertion(token);
 			}
 
 			expect(makeAssertion).to.not.throw();
