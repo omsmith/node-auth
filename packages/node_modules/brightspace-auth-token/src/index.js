@@ -49,31 +49,31 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'context', {
 	}
 });
 
-function hasPermissionInNarrow (narrow, permission) {
-	return narrow.has('*') || narrow.has(permission);
+function hasPermissionInResource (resource, permission) {
+	return resource.has('*') || resource.has(permission);
 }
 
-function hasNarrowPermissionInBroad (broad, narrow, permission) {
-	const wild = broad.get('*');
-	if (!!wild && hasPermissionInNarrow(wild, permission)) {
+function hasResourcePermissionInGroup (group, resource, permission) {
+	const wild = group.get('*');
+	if (!!wild && hasPermissionInResource(wild, permission)) {
 		return true;
 	}
 
-	const permissions = broad.get(narrow);
-	return !!permissions && hasPermissionInNarrow(permissions, permission);
+	const permissions = group.get(resource);
+	return !!permissions && hasPermissionInResource(permissions, permission);
 }
 
-BrightspaceAuthToken.prototype.hasScope = function hasScope (broad, narrow, permission) {
+BrightspaceAuthToken.prototype.hasScope = function hasScope (group, resource, permission) {
 	// calls getter
 	const scope = this.scope;
 
 	const wild = scope.get('*');
-	if (!!wild && hasNarrowPermissionInBroad(wild, narrow, permission)) {
+	if (!!wild && hasResourcePermissionInGroup(wild, resource, permission)) {
 		return true;
 	}
 
-	const narrows = scope.get(broad);
-	return !!narrows && hasNarrowPermissionInBroad(narrows, narrow, permission);
+	const resources = scope.get(group);
+	return !!resources && hasResourcePermissionInGroup(resources, resource, permission);
 };
 
 Object.defineProperty(BrightspaceAuthToken.prototype, 'scope', {
@@ -91,26 +91,26 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'scope', {
 			const scopeParts = scopeString.split(':');
 
 			const
-				broad = scopeParts[0],
-				narrow = scopeParts[1],
-				permissions = scopeParts[2].split('|');
+				group = scopeParts[0],
+				resource = scopeParts[1],
+				permissions = scopeParts[2].split(',');
 
-			if (!scope.has(broad)) {
-				scope.set(broad, new Map([[
-					narrow,
+			if (!scope.has(group)) {
+				scope.set(group, new Map([[
+					resource,
 					new Set(permissions)
 				]]));
 				continue;
 			}
 
-			const narrows = scope.get(broad);
+			const resources = scope.get(group);
 
-			if (!narrows.has(narrow)) {
-				narrows.set(narrow, new Set(permissions));
+			if (!resources.has(resource)) {
+				resources.set(resource, new Set(permissions));
 				continue;
 			}
 
-			const permissionSet = narrows.get(narrow);
+			const permissionSet = resources.get(resource);
 			for (let permission of permissions) {
 				permissionSet.add(permission);
 			}
