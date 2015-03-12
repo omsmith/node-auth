@@ -10,7 +10,7 @@ describe('Scopes', function () {
 	it('should expose all scopes as $scope', function () {
 		const
 			scopeStrings = [
-				'https://api.brightspace.com/auth/valence:apps:manage|update',
+				'https://api.brightspace.com/auth/valence:apps:manage,update',
 				'https://api.brightspace.com/auth/*:*:read',
 				'https://api.brightspace.com/auth/foo:*:delete',
 				'https://api.brightspace.com/auth/foo:bar:*'
@@ -38,7 +38,7 @@ describe('Scopes', function () {
 		let token;
 		before(function () {
 			const scopeStrings = [
-				'https://api.brightspace.com/auth/valence:apps:manage|update',
+				'https://api.brightspace.com/auth/valence:apps:manage,update',
 				'https://api.brightspace.com/auth/*:*:read',
 				'https://api.brightspace.com/auth/foo:*:delete',
 				'https://api.brightspace.com/auth/foo:bar:*'
