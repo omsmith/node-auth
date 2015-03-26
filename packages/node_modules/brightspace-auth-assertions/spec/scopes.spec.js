@@ -3,7 +3,7 @@
 'use strict';
 
 const
-	AuthToken = require('brightspace-auth-token'),
+	AuthToken = require('@d2l/brightspace-auth-token'),
 	expect = require('chai').expect;
 
 const AssertionCompiler = require('../');
@@ -16,7 +16,7 @@ describe('scope assertions', function () {
 
 		function makeAssertion () {
 			const token = new AuthToken({
-				scope: 'https://api.brightspace.com/auth/valence:apps:manage'
+				scope: 'valence:apps:manage'
 			});
 
 			assertion(token);
@@ -33,13 +33,13 @@ describe('scope assertions', function () {
 
 		function makeAssertion () {
 			assertion(new AuthToken({
-				scope: 'https://api.brightspace.com/auth/*:*:*'
+				scope: '*:*:*'
 			}));
 			assertion(new AuthToken({
-				scope: 'https://api.brightspace.com/auth/valence:*:*'
+				scope: 'valence:*:*'
 			}));
 			assertion(new AuthToken({
-				scope: 'https://api.brightspace.com/auth/valence:apps:*'
+				scope: 'valence:apps:*'
 			}));
 		}
 
@@ -54,7 +54,7 @@ describe('scope assertions', function () {
 
 		function makeAssertion () {
 			const token = new AuthToken({
-				scope: 'https://api.brightspace.com/auth/foo:bar:baz'
+				scope: 'foo:bar:baz'
 			});
 
 			assertion(token);

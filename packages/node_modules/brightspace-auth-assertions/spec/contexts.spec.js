@@ -3,7 +3,7 @@
 'use strict';
 
 const
-	AuthToken = require('brightspace-auth-token'),
+	AuthToken = require('@d2l/brightspace-auth-token'),
 	expect = require('chai').expect;
 
 const AssertionCompiler = require('../');
