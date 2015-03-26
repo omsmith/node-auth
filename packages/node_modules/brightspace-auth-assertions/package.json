@@ -5,7 +5,7 @@
   "description": "Require conditions are met by a Brigtspace JWT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/blee-d2l/node-auth-assertions.git"
+    "url": "https://github.com/Brightspace/node-auth-assertions.git"
   },
   "main": "src/index.js",
   "scripts": {
