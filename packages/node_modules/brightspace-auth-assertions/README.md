@@ -5,18 +5,23 @@ Status](https://magnum.travis-ci.com/blee-d2l/node-auth-assertions.svg?token=ayc
 ## Example
 
 ```js
-const AssertionCompiler = require('brightspace-auth-assertions');
+const
+	AssertionCompiler = require('brightspace-auth-assertions'),
+	AuthToken = require('brightspace-auth-token');
 
 const asserter = new AssertionCompiler()
 	.scope('valance', 'apps', 'manage').require()
-	.context(AssertionCompiler.contexts.tenant).require()
+	.context(AssertionCompiler.contexts.Tenant).require()
 	.compile();
 
 // ...
 
 server.on('request', function (req) {
 	const auth = getAuthInfo();
-	asserter(auth);
+
+	const token = new AuthToken(auth);
+
+	asserter(token);
 });
 ```
 
