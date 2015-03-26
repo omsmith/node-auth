@@ -1,6 +1,6 @@
 {
   "name": "@d2l/brightspace-auth-assertions",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Require conditions are met by a Brigtspace JWT",
   "repository": {
     "type": "git",
