@@ -1,6 +1,5 @@
 {
-  "private": true,
-  "name": "brightspace-auth-assertions",
+  "name": "@d2l/brightspace-auth-assertions",
   "version": "1.0.0",
   "description": "Require conditions are met by a Brigtspace JWT",
   "repository": {
