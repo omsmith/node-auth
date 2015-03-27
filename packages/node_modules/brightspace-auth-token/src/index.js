@@ -85,7 +85,9 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'scope', {
 
 		scope = this._scope = new Map();
 
-		const scopeStrings = this._source.scope.split(' ');
+		const scopeStrings = Array.isArray(this._source.scope)
+			? this._source.scope
+			: this._source.scope.split(' ');
 
 		for (let scopeString of scopeStrings) {
 			const scopeParts = scopeString.split(':');
