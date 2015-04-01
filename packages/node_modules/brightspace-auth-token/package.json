@@ -1,6 +1,6 @@
 {
   "name": "@d2l/brightspace-auth-token",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "Helper for interacting with an incoming Brightspace JWT",
   "repository": {
     "type": "git",
