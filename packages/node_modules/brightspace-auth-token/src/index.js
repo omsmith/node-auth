@@ -3,6 +3,11 @@
 const contexts = require('./contexts');
 
 function BrightspaceAuthToken (decodedPayload, source) {
+	if ('object' !== typeof decodedPayload
+		|| 'string' !== typeof source) {
+		throw new Error('Invalid arguments, expected (Object, String)');
+	}
+
 	if (!(this instanceof BrightspaceAuthToken)) {
 		return new BrightspaceAuthToken(decodedPayload, source);
 	}
