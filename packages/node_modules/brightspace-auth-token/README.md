@@ -7,9 +7,10 @@
 const AuthToken = require('brightspace-auth-token');
 
 function *authMiddleware (next) {
-	const validatedJwtPayload = yield things(this);
+	const jwtSignature = this.headers.authorization; // or cookies
+	const validatedJwtPayload = yield things(jwtSignature);
 
-	const token = new AuthToken(vanillaPayload);
+	const token = new AuthToken(vanillaPayload, jwtSignature);
 
 	this.auth = token;
 
