@@ -66,5 +66,13 @@ describe('Scopes', function () {
 			expect(token.hasScope('foo', 'bar', 'read')).to.be.true;
 			expect(token.hasScope('foo', 'bar', 'rawr')).to.be.true;
 		});
+
+		it('should handle invalid scopes', function () {
+			const tokenWithBadScopes = new BrightspaceAuthToken({
+				scope: 'foo:bar:baz hieveryone!'
+			});
+
+			expect(tokenWithBadScopes.hasScope('foo', 'bar', 'baz')).to.be.true;
+		});
 	});
 });

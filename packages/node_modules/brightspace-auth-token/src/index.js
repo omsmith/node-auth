@@ -92,6 +92,10 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'scope', {
 		for (let scopeString of scopeStrings) {
 			const scopeParts = scopeString.split(':');
 
+			if (3 !== scopeParts.length) {
+				continue;
+			}
+
 			const
 				group = scopeParts[0],
 				resource = scopeParts[1],
