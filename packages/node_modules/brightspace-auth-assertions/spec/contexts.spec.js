@@ -19,7 +19,7 @@ describe('context assertions', function () {
 				const token = new AuthToken({
 					sub: '169',
 					tenantid: 'foozleberries'
-				});
+				}, 'x.y.z');
 
 				assertion(token);
 			}
@@ -36,7 +36,7 @@ describe('context assertions', function () {
 			function makeAssertion () {
 				const token = new AuthToken({
 					tenantid: 'foozleberries'
-				});
+				}, 'x.y.z');
 
 				assertion(token);
 			}
@@ -51,7 +51,7 @@ describe('context assertions', function () {
 				.compile();
 
 			function makeAssertion () {
-				const token = new AuthToken({});
+				const token = new AuthToken({}, 'x.y.z');
 
 				assertion(token);
 			}
@@ -71,7 +71,7 @@ describe('context assertions', function () {
 				const token = new AuthToken({
 					sub: '169',
 					tenantid: 'foozleberries'
-				});
+				}, 'x.y.z');
 
 				assertion(token);
 			}
@@ -88,7 +88,7 @@ describe('context assertions', function () {
 			function makeAssertion () {
 				const token = new AuthToken({
 					tenantid: 'foozleberries'
-				});
+				}, 'x.y.z');
 
 				assertion(token);
 			}
@@ -103,7 +103,7 @@ describe('context assertions', function () {
 				.compile();
 
 			function makeAssertion () {
-				const token = new AuthToken({});
+				const token = new AuthToken({}, 'x.y.z');
 
 				assertion(token);
 			}
@@ -123,7 +123,7 @@ describe('context assertions', function () {
 				const token = new AuthToken({
 					sub: '169',
 					tenantid: 'foozleberries'
-				});
+				}, 'x.y.z');
 
 				assertion(token);
 			}
@@ -140,7 +140,7 @@ describe('context assertions', function () {
 			function makeAssertion () {
 				const token = new AuthToken({
 					tenantid: 'foozleberries'
-				});
+				}, 'x.y.z');
 
 				assertion(token);
 			}
@@ -155,7 +155,7 @@ describe('context assertions', function () {
 				.compile();
 
 			function makeAssertion () {
-				const token = new AuthToken({});
+				const token = new AuthToken({}, 'x.y.z');
 
 				assertion(token);
 			}

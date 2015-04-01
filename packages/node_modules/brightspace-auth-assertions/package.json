@@ -20,7 +20,7 @@
     "mocha": "^2.1.0"
   },
   "dependencies": {
-    "@d2l/brightspace-auth-token": "^2.0.0",
+    "@d2l/brightspace-auth-token": "^3.0.2",
     "inherits": "^2.0.1"
   }
 }

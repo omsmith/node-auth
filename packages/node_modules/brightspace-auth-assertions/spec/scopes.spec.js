@@ -17,7 +17,7 @@ describe('scope assertions', function () {
 		function makeAssertion () {
 			const token = new AuthToken({
 				scope: 'valence:apps:manage'
-			});
+			}, 'x.y.z');
 
 			assertion(token);
 		}
@@ -34,13 +34,13 @@ describe('scope assertions', function () {
 		function makeAssertion () {
 			assertion(new AuthToken({
 				scope: '*:*:*'
-			}));
+			}, 'x.y.z'));
 			assertion(new AuthToken({
 				scope: 'valence:*:*'
-			}));
+			}, 'x.y.z'));
 			assertion(new AuthToken({
 				scope: 'valence:apps:*'
-			}));
+			}, 'x.y.z'));
 		}
 
 		expect(makeAssertion).to.not.throw();
@@ -55,7 +55,7 @@ describe('scope assertions', function () {
 		function makeAssertion () {
 			const token = new AuthToken({
 				scope: 'foo:bar:baz'
-			});
+			}, 'x.y.z');
 
 			assertion(token);
 		}
