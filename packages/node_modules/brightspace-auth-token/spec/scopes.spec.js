@@ -17,7 +17,7 @@ describe('Scopes', function () {
 			],
 			token = new BrightspaceAuthToken({
 				scope: scopeStrings.join(' ')
-			});
+			}, 'x.y.z');
 
 		expect(token.scope).to.be.an.instanceof(Map);
 		expect(token.scope.get('valence')).to.be.an.instanceof(Map);
@@ -46,7 +46,7 @@ describe('Scopes', function () {
 
 			token = new BrightspaceAuthToken({
 				scope: scopeStrings.join(' ')
-			});
+			}, 'x.y.z');
 		});
 
 		it('should match explicitly', function () {
@@ -70,7 +70,7 @@ describe('Scopes', function () {
 		it('should handle invalid scopes', function () {
 			const tokenWithBadScopes = new BrightspaceAuthToken({
 				scope: 'foo:bar:baz hieveryone!'
-			});
+			}, 'x.y.z');
 
 			expect(tokenWithBadScopes.hasScope('foo', 'bar', 'baz')).to.be.true;
 		});

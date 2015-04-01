@@ -19,7 +19,7 @@ describe('Contexts', function () {
 			token = new BrightspaceAuthToken({
 				sub: '169',
 				tenantid: 'foozleberries'
-			});
+			}, 'x.y.z');
 		});
 
 		it('$context should be the User context', function () {
@@ -44,7 +44,7 @@ describe('Contexts', function () {
 		before(function () {
 			token = new BrightspaceAuthToken({
 				tenantid: 'foozleberries'
-			});
+			}, 'x.y.z');
 		});
 
 		it('$context should be the Tenant context', function () {
@@ -67,7 +67,7 @@ describe('Contexts', function () {
 	describe('when "sub" nor "tenantid" are present', function () {
 		let token;
 		before(function () {
-			token = new BrightspaceAuthToken({});
+			token = new BrightspaceAuthToken({}, 'x.y.z');
 		});
 
 		it('$context should be the Global context', function () {

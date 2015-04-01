@@ -2,17 +2,18 @@
 
 const contexts = require('./contexts');
 
-function BrightspaceAuthToken (source) {
+function BrightspaceAuthToken (decodedPayload, source) {
 	if (!(this instanceof BrightspaceAuthToken)) {
-		return new BrightspaceAuthToken(source);
+		return new BrightspaceAuthToken(decodedPayload, source);
 	}
 
 	this._context = null;
 	this._scope = null;
 
-	this._source = source;
-	this.tenant = source.tenantid;
-	this.user = source.sub;
+	this._source = decodedPayload;
+	this.source = source;
+	this.tenant = decodedPayload.tenantid;
+	this.user = decodedPayload.sub;
 }
 
 BrightspaceAuthToken.prototype.isGlobalContext = function isGlobalContext () {
