@@ -63,4 +63,15 @@ describe('scope assertions', function () {
 		expect(makeAssertion).to.throw(/insufficient scope/i);
 		done();
 	});
+
+	it('should throw when trying to reject scopes', function (done) {
+		function buildAssertion () {
+			new AssertionCompiler()
+				.scope('foo', 'bar', 'baz').reject()
+				.compile();
+		}
+
+		expect(buildAssertion).to.throw(/makes no sense/);
+		done();
+	});
 });
