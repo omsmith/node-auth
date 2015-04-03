@@ -4,6 +4,8 @@ const
 	AuthToken = require('@d2l/brightspace-auth-token'),
 	inherits = require('inherits');
 
+const errors = require('./errors');
+
 function AssertionCompiler () {
 	if (!(this instanceof AssertionCompiler)) {
 		return new AssertionCompiler();
@@ -90,7 +92,7 @@ ScopeAssertion.prototype._assert = function assertScope (token) {
 	let matched = token.hasScope(this.broad, this.narrow, this.permission);
 
 	if (!matched) {
-		throw new Error('Insufficient scope');
+		throw new errors.InsufficientScope(this.broad, this.narrow, this.permission);
 	}
 };
 
@@ -124,9 +126,10 @@ ContextAssertion.prototype._assert = function assertContext (token) {
 	}
 
 	if ((this._required && !matched) || (this._rejected && matched)) {
-		throw new Error('Invalid Context');
+		throw new errors.InvalidContext();
 	}
 };
 
 module.exports = AssertionCompiler;
 module.exports.contexts = AuthToken.contexts;
+module.exports.errors = errors;
