@@ -41,8 +41,8 @@ function AuthAssertion (compiler) {
 	}
 
 	this._compiler = compiler;
-	this._require = false;
-	this._reject = false;
+	this._required = false;
+	this._rejected = false;
 }
 
 AuthAssertion.prototype._inject = function injectAssertion () {
@@ -52,13 +52,21 @@ AuthAssertion.prototype._inject = function injectAssertion () {
 };
 
 AuthAssertion.prototype.require = function requireAssertion () {
-	this._require = true;
+	this._required = true;
+
+	if ('function' === typeof this._require) {
+		this._require();
+	}
 
 	return this._inject();
 };
 
 AuthAssertion.prototype.reject = function rejectAssertion () {
-	this._reject = true;
+	this._rejected = true;
+
+	if ('function' === typeof this._reject) {
+		this._reject();
+	}
 
 	return this._inject();
 };
@@ -81,13 +89,13 @@ inherits(ScopeAssertion, AuthAssertion);
 ScopeAssertion.prototype._assert = function assertScope (token) {
 	let matched = token.hasScope(this.broad, this.narrow, this.permission);
 
-	if (this._require && !matched) {
+	if (!matched) {
 		throw new Error('Insufficient scope');
 	}
+};
 
-	if (this._reject && matched) {
-		throw new Error('Too much scope');
-	}
+ScopeAssertion.prototype._reject = function rejectScope () {
+	throw new Error('Rejecting a scope makes no sense');
 };
 
 function ContextAssertion (compiler, context) {
@@ -115,7 +123,7 @@ ContextAssertion.prototype._assert = function assertContext (token) {
 		}
 	}
 
-	if ((this._require && !matched) || (this._reject && matched)) {
+	if ((this._required && !matched) || (this._rejected && matched)) {
 		throw new Error('Invalid Context');
 	}
 };
