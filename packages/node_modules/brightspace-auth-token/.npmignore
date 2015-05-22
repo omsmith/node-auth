@@ -1,6 +1,8 @@
-.gitignore
+node_modules
 
 .npmignore
+.gitignore
+*.tgz
 
 .editorconfig
 .jscs.json
@@ -8,5 +10,7 @@
 .jshintrc
 
 .travis.yml
+travis-deploy.sh
+.npmrc*
 
 spec
