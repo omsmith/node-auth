@@ -38,6 +38,17 @@ describe('$cacheKey', function () {
 		}, null);
 	});
 
+	it('should provide a consistent cache key for tokens, even when input json was ordered differently', function () {
+		const tokens = [
+			JSON.parse('{"sub":123,"tenantid":"66c0e49b-6ab4-4989-af8a-670194343608","scope":"foo:bar:baz"}'),
+			JSON.parse('{"sub":123,"scope":"foo:bar:baz","tenantid":"66c0e49b-6ab4-4989-af8a-670194343608"}')
+		].map(function (claims) {
+			return new BrightspaceAuthToken(claims, 'x.y.z');
+		});
+
+		expect(tokens[0].cacheKey).to.equal(tokens[1].cacheKey);
+	});
+
 	describe('different non-volatile claims should result in a different cache key', function () {
 		function runTest (fn) {
 			const tokens = [null, null, null].map(function () {

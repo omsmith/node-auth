@@ -145,7 +145,7 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'cacheKey', {
 		const claims = this._source;
 		const normalizedClaims = {};
 
-		for (const claim of Object.keys(claims)) {
+		for (const claim of Object.keys(claims).sort()) {
 			if (-1 === volatileClaims.indexOf(claim)) {
 				normalizedClaims[claim] = claims[claim];
 			}
