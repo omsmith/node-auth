@@ -1,5 +1,5 @@
 # brightspace-auth-token
-[![Build Status](https://magnum.travis-ci.com/blee-d2l/node-auth-token.svg?token=ayc5reQ1Z16PZREzv2eW&branch=master)](https://magnum.travis-ci.com/blee-d2l/node-auth-token)
+[![Build Status](https://travis-ci.com/Brightspace/node-auth-token.svg?token=M9m6audKHodN5pA44rGq&branch=master)](https://travis-ci.com/Brightspace/node-auth-token)
 
 ## Example
 
