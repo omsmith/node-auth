@@ -12,6 +12,7 @@ function BrightspaceAuthToken (decodedPayload, source) {
 		return new BrightspaceAuthToken(decodedPayload, source);
 	}
 
+	this._cacheKey = null;
 	this._context = null;
 	this._scope = null;
 
@@ -129,6 +130,29 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'scope', {
 		}
 
 		return scope;
+	}
+});
+
+
+const volatileClaims = ['exp', 'iat', 'jti', 'nbf'];
+Object.defineProperty(BrightspaceAuthToken.prototype, 'cacheKey', {
+	get: function () {
+		let cacheKey = this._cacheKey;
+		if (null !== cacheKey) {
+			return cacheKey;
+		}
+
+		const claims = this._source;
+		const normalizedClaims = {};
+
+		for (const claim of Object.keys(claims)) {
+			if (-1 === volatileClaims.indexOf(claim)) {
+				normalizedClaims[claim] = claims[claim];
+			}
+		}
+
+		cacheKey = this._cacheKey = new Buffer(JSON.stringify(normalizedClaims)).toString('base64');
+		return cacheKey;
 	}
 });
 
