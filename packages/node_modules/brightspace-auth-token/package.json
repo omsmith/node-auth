@@ -4,7 +4,7 @@
   "description": "Helper for interacting with an incoming Brightspace JWT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/blee-d2l/node-auth-token.git"
+    "url": "https://github.com/Brightspace/node-auth-token.git"
   },
   "main": "src/index.js",
   "scripts": {

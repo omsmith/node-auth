@@ -6,8 +6,8 @@ fi
 
 set -u
 
-KEY="${encrypted_5390d14040b7_key}"
-IV="${encrypted_5390d14040b7_iv}"
+KEY="${encrypted_4ca15621d16b_key}"
+IV="${encrypted_4ca15621d16b_iv}"
 
 NPMRC=$( readlink -f ~/.npmrc )
 NPMRC_TMP=$( readlink -f ~/.npmrc.tmp )
