@@ -1,7 +1,7 @@
 'use strict';
 
 const
-	AuthToken = require('@d2l/brightspace-auth-token'),
+	AuthToken = require('brightspace-auth-token'),
 	inherits = require('inherits');
 
 const errors = require('./errors');
