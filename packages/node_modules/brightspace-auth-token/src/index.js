@@ -2,7 +2,7 @@
 
 const contexts = require('./contexts');
 
-function BrightspaceAuthToken (decodedPayload, source) {
+function BrightspaceAuthToken(decodedPayload, source) {
 	if ('object' !== typeof decodedPayload
 		|| 'string' !== typeof source) {
 		throw new Error('Invalid arguments, expected (Object, String)');
@@ -22,23 +22,23 @@ function BrightspaceAuthToken (decodedPayload, source) {
 	this.user = decodedPayload.sub;
 }
 
-BrightspaceAuthToken.prototype.isGlobalContext = function isGlobalContext () {
+BrightspaceAuthToken.prototype.isGlobalContext = function isGlobalContext() {
 	// calls getter
 	return contexts.Global === this.context;
 };
 
-BrightspaceAuthToken.prototype.isTenantContext = function isTenantContext () {
+BrightspaceAuthToken.prototype.isTenantContext = function isTenantContext() {
 	// calls getter
 	return contexts.Tenant === this.context;
 };
 
-BrightspaceAuthToken.prototype.isUserContext = function isUserContext () {
+BrightspaceAuthToken.prototype.isUserContext = function isUserContext() {
 	// calls getter
 	return contexts.User === this.context;
 };
 
 Object.defineProperty(BrightspaceAuthToken.prototype, 'context', {
-	get: function () {
+	get: function() {
 		let context = this._context;
 		if (null !== context) {
 			return context;
@@ -56,11 +56,11 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'context', {
 	}
 });
 
-function hasPermissionInResource (resource, permission) {
+function hasPermissionInResource(resource, permission) {
 	return resource.has('*') || resource.has(permission);
 }
 
-function hasResourcePermissionInGroup (group, resource, permission) {
+function hasResourcePermissionInGroup(group, resource, permission) {
 	const wild = group.get('*');
 	if (!!wild && hasPermissionInResource(wild, permission)) {
 		return true;
@@ -70,7 +70,7 @@ function hasResourcePermissionInGroup (group, resource, permission) {
 	return !!permissions && hasPermissionInResource(permissions, permission);
 }
 
-BrightspaceAuthToken.prototype.hasScope = function hasScope (group, resource, permission) {
+BrightspaceAuthToken.prototype.hasScope = function hasScope(group, resource, permission) {
 	// calls getter
 	const scope = this.scope;
 
@@ -84,7 +84,7 @@ BrightspaceAuthToken.prototype.hasScope = function hasScope (group, resource, pe
 };
 
 Object.defineProperty(BrightspaceAuthToken.prototype, 'scope', {
-	get: function () {
+	get: function() {
 		let scope = this._scope;
 		if (null !== scope) {
 			return scope;
@@ -96,7 +96,7 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'scope', {
 			? this._source.scope
 			: this._source.scope.split(' ');
 
-		for (let scopeString of scopeStrings) {
+		for (const scopeString of scopeStrings) {
 			const scopeParts = scopeString.split(':');
 
 			if (3 !== scopeParts.length) {
@@ -124,7 +124,7 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'scope', {
 			}
 
 			const permissionSet = resources.get(resource);
-			for (let permission of permissions) {
+			for (const permission of permissions) {
 				permissionSet.add(permission);
 			}
 		}
@@ -133,10 +133,9 @@ Object.defineProperty(BrightspaceAuthToken.prototype, 'scope', {
 	}
 });
 
-
 const volatileClaims = ['exp', 'iat', 'jti', 'nbf'];
 Object.defineProperty(BrightspaceAuthToken.prototype, 'cacheKey', {
-	get: function () {
+	get: function() {
 		let cacheKey = this._cacheKey;
 		if (null !== cacheKey) {
 			return cacheKey;

@@ -8,15 +8,16 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "check-style": "jscs . && jshint .",
+    "check-style": "eslint .",
     "test": "npm run check-style && mocha -R spec spec"
   },
   "author": "D2L Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
     "chai": "^2.1.1",
-    "jscs": "^1.11.3",
-    "jshint": "^2.6.3",
+    "eslint": "^1.10.3",
+    "eslint-config-brightspace": "^0.1.0",
+    "eslint-plugin-react": "^3.16.1",
     "mocha": "^2.1.0",
     "uuid": "^2.0.1",
     "xtend": "^4.0.1"
