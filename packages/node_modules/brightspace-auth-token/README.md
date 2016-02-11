@@ -49,6 +49,20 @@ require('http')
 _decodedPayload_ should be an already verified and parsed JWT body. _source_
 should be the signature from which the payload was retrieved.
 
+---
+
+#### `.user` -> `String|Undefined`
+
+The identifier for the user this token belongs to. Not present outside of user
+context.
+
+---
+
+#### `.tenant` -> `String|Undefined`
+
+The tenant UUID this token belongs to. Not present outside of user and tenant
+contexts.
+
 ___
 
 #### `.isGlobalContext()` -> `Boolean`
@@ -79,6 +93,12 @@ ___
 
 A normalized string which could be used as part of cache keys when caching
 resources.
+
+---
+
+#### `.source` -> `String`
+
+The source signature provider when creating the token.
 
 
 ## Testing
