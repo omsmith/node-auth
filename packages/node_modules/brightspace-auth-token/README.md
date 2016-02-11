@@ -1,7 +1,7 @@
 # brightspace-auth-token
 [![Build Status](https://travis-ci.com/Brightspace/node-auth-token.svg?token=M9m6audKHodN5pA44rGq&branch=master)](https://travis-ci.com/Brightspace/node-auth-token)
 
-## Example
+## Usage
 
 ```js
 const AuthToken = require('brightspace-auth-token');
@@ -29,6 +29,47 @@ function *handleReq () {
 	}
 }
 ```
+
+### API
+
+---
+
+#### `new AuthToken(Object decodedPayload, String source)` -> `AuthToken`
+
+_decodedPayload_ should be an already verified and parsed JWT body. _source_
+should be the signature from which the payload was retrieved.
+
+___
+
+#### `.isGlobalContext()` -> `Boolean`
+
+___
+
+#### `.isTenantContext()` -> `Boolean`
+
+---
+
+#### `.isUserContext()` -> `Boolean`
+
+---
+
+#### `.context` -> `Symbol`
+
+___
+
+#### `.hasScope(String group, String resource, String permission)` -> `Boolean`
+
+---
+
+#### `.scope` -> `Map`
+
+---
+
+#### `.cacheKey` -> `String`
+
+A normalized string which could be used as part of cache keys when caching
+resources.
+
 
 ## Testing
 
