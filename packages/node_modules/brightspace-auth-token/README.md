@@ -1,5 +1,6 @@
 # brightspace-auth-token
-[![Build Status](https://travis-ci.com/Brightspace/node-auth-token.svg?token=M9m6audKHodN5pA44rGq&branch=master)](https://travis-ci.com/Brightspace/node-auth-token)
+[![Build
+Status](https://travis-ci.org/Brightspace/node-auth-token.svg?branch=master)](https://travis-ci.org/Brightspace/node-auth-token)
 
 ## Usage
 
