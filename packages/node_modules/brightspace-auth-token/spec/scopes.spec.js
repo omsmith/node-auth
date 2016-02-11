@@ -6,8 +6,8 @@ const expect = require('chai').expect;
 
 const BrightspaceAuthToken = require('../');
 
-describe('Scopes', function () {
-	it('should expose all scopes as $scope', function () {
+describe('Scopes', function() {
+	it('should expose all scopes as $scope', function() {
 		const
 			scopeStrings = [
 				'valence:apps:manage,update',
@@ -34,9 +34,9 @@ describe('Scopes', function () {
 		expect(token.scope.get('*').get('*').has('read')).to.be.true;
 	});
 
-	describe('#hasScope', function () {
+	describe('#hasScope', function() {
 		let token;
-		before(function () {
+		before(function() {
 			const scopeStrings = [
 				'valence:apps:manage,update',
 				'*:*:read',
@@ -49,13 +49,13 @@ describe('Scopes', function () {
 			}, 'x.y.z');
 		});
 
-		it('should match explicitly', function () {
+		it('should match explicitly', function() {
 			expect(token.hasScope('valence', 'apps', 'manage')).to.be.true;
 			expect(token.hasScope('valence', 'apps', 'update')).to.be.true;
 			expect(token.hasScope('valence', 'apps', 'rawr')).to.be.false;
 		});
 
-		it('should respect wildcards', function () {
+		it('should respect wildcards', function() {
 			expect(token.hasScope('valence', 'apps', 'read')).to.be.true;
 			expect(token.hasScope('chuckle', 'bunny', 'read')).to.be.true;
 			expect(token.hasScope('chuckle', 'bunny', 'rawr')).to.be.false;
@@ -67,7 +67,7 @@ describe('Scopes', function () {
 			expect(token.hasScope('foo', 'bar', 'rawr')).to.be.true;
 		});
 
-		it('should handle invalid scopes', function () {
+		it('should handle invalid scopes', function() {
 			const tokenWithBadScopes = new BrightspaceAuthToken({
 				scope: 'foo:bar:baz hieveryone!'
 			}, 'x.y.z');
