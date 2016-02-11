@@ -6,28 +6,38 @@
 ```js
 const AuthToken = require('brightspace-auth-token');
 
-function *authMiddleware (next) {
-	const jwtSignature = this.headers.authorization; // or cookies
-	const validatedJwtPayload = yield things(jwtSignature);
+// See brightspace-auth-validation to do this for you!
+function authorizeRequest(req) {
+	const signature = req.headers.authorization.match(/Bearer (.+)/)[1];
+	const payload = parseAndValidateSignature(signature);
 
-	const token = new AuthToken(vanillaPayload, jwtSignature);
-
-	this.auth = token;
-
-	yield* next;
-};
-
-// ...
-
-function *handleReq () {
-	if (this.auth.hasScope('valence', 'apps', 'manage')) {
-		// things so hard
-	}
-
-	if (this.auth.isUserContext()) {
-		// this token is for a user
-	}
+	return new AuthToken(payload, signature);
 }
+
+require('http')
+	.createServer((req, res) => {
+		const token = authorizeRequest(req);
+
+		if (!token.hasScope('random', 'greetings', 'read')) {
+			res.statusCode = 403;
+			res.end('You don\'t have sufficient scope!\n');
+			return;
+		}
+
+		let msg;
+		if (token.isUserContext()) {
+			msg = 'Hello user!\n';
+		} else if (token.isTenantContext()) {
+			msg = 'Hello service, acting at the tenant level!\n';
+		} else if (token.isGlobalContext()) {
+			msg = 'Hello service, maintaining all of our systems!\n';
+		}
+
+		res.statusCode = 200;
+		res.end(msg);
+	})
+	.listen(3000);
+
 ```
 
 ### API
