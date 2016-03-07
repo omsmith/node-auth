@@ -1,1 +1,1 @@
-# node-auth-jwksExtracted from https://github.com/Brightspace/valence-auth-server originally written by Owen Smith.
+# node-auth-jwksKey generation logic for auth-provisioning.Extracted from https://github.com/Brightspace/valence-auth-server originally written by Owen Smith.
