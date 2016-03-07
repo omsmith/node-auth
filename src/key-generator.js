@@ -3,57 +3,73 @@
 var
 	SigningKey = require('./signing-key'),
 	rsaKeygen = require('rsa-keygen'),
-	co = require('co'),
 	uuid = require('uuid');
 
 const assert = require('assert');
 const AbstractPublicKeyStore = require('./abstract-public-key-store');
-
-/*eslint no-invalid-this: 0*/
-
-const
-	SIGNING_KEY_AGE = process.env.SIGNING_KEY_AGE || 60 * 60,
-	SIGNING_KEY_OVERLAP = process.env.SIGNING_KEY_OVERLAP || 5 * 60,
-	SIGNING_KEY_SIZE = process.env.SIGNING_KEY_SIZE || 1024;
+const SIGNING_KEY_TYPE_RSA = 'RSA';
 
 function clock() {
 	return Math.round(Date.now() / 1000);
 }
 
+const
+	DEFAULT_SIGNING_KEY_AGE = 60 * 60,
+	DEFAULT_SIGNING_KEY_OVERLAP = 5 * 60,
+	DEFAULT_RSA_SIGNING_KEY_SIZE = 1024;
+
 function KeyGenerator(opts) {
 	assert(opts.publicKeyStore instanceof AbstractPublicKeyStore);
-	this.publicKeyStore = opts.publicKeyStore;
+	this._publicKeyStore = opts.publicKeyStore;
+
+	this.signingKeyAge = opts.signingKeyAge || DEFAULT_SIGNING_KEY_AGE;
+	assert(this.signingKeyAge > 0, 'signingKeyAge must be non-negative');
+
+	this.signingKeyOverlap = opts.signingKeyOverlap || DEFAULT_SIGNING_KEY_OVERLAP;
+	assert(this.signingKeyOverlap > 0, 'signingKeyOverlap must be non-negative');
+
+	assert(SIGNING_KEY_TYPE_RSA === opts.signingKeyType, 'Only "RSA" is supported currently');
+	assert(opts.rsa, 'Missing RSA-specific options');
+
+	this.rsaSettings = {
+		signingKeySize: opts.rsa.signingKeySize || DEFAULT_RSA_SIGNING_KEY_SIZE
+	};
+
+	assert(this.rsaSettings.signingKeySize > 0, 'signingKeySize must be non-negative');
+
+	this._keyGenerationTask = null;
+	this._currentPrivateKey = null;
+
+	this._generateNewKeys = this._generateNewKeys.bind(this);
+	this._generateNewKeys();
+	setInterval(this._generateNewKeys, this.signingKeyAge * 1000);
 }
 
-KeyGenerator.prototype.run = function() {
-	this._generateNewKeys();
-	setInterval(this._generateNewKeys.bind(this), SIGNING_KEY_AGE * 1000);
-};
-
-KeyGenerator.prototype._generateNewKeys = function() {
-	const keypair = rsaKeygen.generate(SIGNING_KEY_SIZE);
+KeyGenerator.prototype._generateNewKeys = function _generateNewKeys() {
+	const keypair = rsaKeygen.generate(this.rsaSettings.signingKeySize);
 	const kid = uuid();
 
 	const privateKey = SigningKey.fromPem(keypair.private_key, kid);
 	const publicKey = SigningKey.fromPem(keypair.public_key, kid);
 
-	this._keyGenerationTask = this.publicKeyStore.storePublicKey(publicKey, clock() + SIGNING_KEY_AGE + SIGNING_KEY_OVERLAP)
+	const expiry = clock() + this.signingKeyAge + this.signingKeyOverlap;
+
+	this._keyGenerationTask = this._publicKeyStore.storePublicKey(publicKey, expiry)
 		.then(() => {
 			this._currentPrivateKey = privateKey;
 			this._keyGenerationTask = undefined;
+			return this._currentPrivateKey;
 		});
 };
 
-KeyGenerator.prototype.getCurrentPrivateKey = co.wrap(function*() {
-	if ('undefined' !== typeof this._keyGenerationTask) {
-		yield this._keyGenerationTask;
-	}
+KeyGenerator.prototype.getCurrentPrivateKey = function getCurrentPrivateKey() {
+	return this._keyGenerationTask
+		? this._keyGenerationTask
+		: Promise.resolve(this._currentPrivateKey);
+};
 
-	return this._currentPrivateKey;
-});
-
-KeyGenerator.prototype.getJwks = co.wrap(function*() {
-	return this.publicKeyStore.lookupPublicKeys()
+KeyGenerator.prototype.getJwks = function getJwks() {
+	return this._publicKeyStore.lookupPublicKeys()
 		.then(keys => {
 			assert(Array.isArray(keys));
 
@@ -70,6 +86,6 @@ KeyGenerator.prototype.getJwks = co.wrap(function*() {
 				keys: jwks
 			};
 		});
-});
+};
 
 module.exports = KeyGenerator;

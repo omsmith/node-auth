@@ -12,6 +12,10 @@ require('sinon-as-promised');
 const
 	TEST_SIGNING_KEY_AGE = 60 * 60,
 	TEST_SIGNING_KEY_OVERLAP = 5 * 60,
+	TEST_SIGNING_KEY_TYPE = 'RSA',
+
+	TEST_RSA_SIGNING_KEY_SIZE = 1024,
+
 	TEST_UUID = '1234';
 
 class DummyPublicKeyStore extends AbstractPublicKeyStore {
@@ -24,6 +28,9 @@ class DummyPublicKeyStore extends AbstractPublicKeyStore {
 	}
 }
 
+const
+	dummyPublicKeyStore = new DummyPublicKeyStore();
+
 describe('KeyGenerator', () => {
 	let keyGenerator, publicKeyStoreMock, revertUuid, sandbox, clock, KeyGenerator;
 
@@ -32,12 +39,12 @@ describe('KeyGenerator', () => {
 		KeyGenerator = rewire('../src/key-generator'),
 		sandbox = sinon.sandbox.create();
 		revertUuid = KeyGenerator.__set__('uuid', () => TEST_UUID);
-		let dummyPublicKeyStore = new DummyPublicKeyStore();
-		keyGenerator = new KeyGenerator({
-			publicKeyStore: dummyPublicKeyStore
+		publicKeyStoreMock = sandbox.mock(dummyPublicKeyStore);
+
+		sandbox.stub(KeyGenerator.__get__('rsaKeygen'), 'generate', () => {
+			return exampleKeys.pem();
 		});
 
-		publicKeyStoreMock = sandbox.mock(keyGenerator.publicKeyStore);
 	});
 
 	afterEach(() => {
@@ -47,57 +54,93 @@ describe('KeyGenerator', () => {
 		sandbox.restore();
 	});
 
-	describe('run(...)', () => {
+	function createKeyGenerator(){
+		return new KeyGenerator({
+			publicKeyStore: dummyPublicKeyStore,
+			signingKeyAge: TEST_SIGNING_KEY_AGE,
+			signingKeyOverlap: TEST_SIGNING_KEY_OVERLAP,
+			signingKeyType: TEST_SIGNING_KEY_TYPE,
+			rsa: {
+				signingKeySize: TEST_RSA_SIGNING_KEY_SIZE
+			}
+		});
+	}
+
+	describe('constructor(...)', () => {
+		let generateNewKeysSpy;
+		beforeEach(() => {
+			generateNewKeysSpy = sinon.spy();
+			KeyGenerator.__set__('KeyGenerator.prototype._generateNewKeys', generateNewKeysSpy);
+			createKeyGenerator();
+		})
+
 		it('calls _generateNewKeys right a way', () => {
-			keyGenerator._generateNewKeys = sinon.spy();
-			keyGenerator.run();
-			assert(keyGenerator._generateNewKeys.calledOnce);
+			assert(generateNewKeysSpy.calledOnce);
 		});
 
 		it('sets interval to call _generateNewKeys', () => {
-			keyGenerator._generateNewKeys = sinon.spy();
-			keyGenerator.run();
 			clock.tick(TEST_SIGNING_KEY_AGE * 1000);
-			assert(keyGenerator._generateNewKeys.calledTwice);
+			assert(generateNewKeysSpy.calledTwice);
 		});
 
 		it('keeps calling _generateNewKeys', () => {
-			keyGenerator._generateNewKeys = sinon.spy();
-			keyGenerator.run();
 			clock.tick(TEST_SIGNING_KEY_AGE * 15000);
-			assert(1 + 15 === keyGenerator._generateNewKeys.callCount);
+			assert(1 + 15 === generateNewKeysSpy.callCount);
 		});
 	});
 
 	describe('_generateNewKeys(...)', () => {
-		it('stores proper public key', () => {
-			const TICK_MS = 2000;
-			clock.tick(TICK_MS);
+		it('stores public key with a proper timeout right a way', () => {
+			publicKeyStoreMock.expects('_storePublicKey')
+				.withArgs(JSON.stringify(exampleKeys.jwk(TEST_UUID).public_key),
+				TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP)
+				.resolves();
 
-			sandbox.stub(KeyGenerator.__get__('rsaKeygen'), 'generate', () => {
-				return exampleKeys.pem();
-			});
+			createKeyGenerator();
+		});
+
+		it('stores public key with a proper timeout in 5 seconds', () => {
+			let TICK_MS = 5;
+			clock.tick(TICK_MS);
 
 			publicKeyStoreMock.expects('_storePublicKey')
 				.withArgs(JSON.stringify(exampleKeys.jwk(TEST_UUID).public_key),
-				(TICK_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP)
+				Math.round(TICK_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP)
 				.resolves();
 
-			keyGenerator._generateNewKeys();
+			createKeyGenerator();
+		});
+
+		it('initializes _keyGenerationTask', () => {
+			publicKeyStoreMock.expects('_storePublicKey')
+				.withArgs(JSON.stringify(exampleKeys.jwk(TEST_UUID).public_key),
+				TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP)
+				.resolves();
+
+			const keyGenerator = createKeyGenerator();
 			assert(keyGenerator._keyGenerationTask);
 
 			return keyGenerator._keyGenerationTask.then(() => {
 				assert(undefined === keyGenerator._keyGenerationTask);
-				assert.deepEqual(keyGenerator._currentPrivateKey, exampleKeys.jwk(TEST_UUID).private_key);
+				assert.deepEqual(keyGenerator._currentPrivateKey,
+					exampleKeys.jwk(TEST_UUID).private_key);
 			});
 		});
+
+
 	});
 
 	describe('getCurrentPrivateKey(...)', () => {
-		it('returns proper private key after yielding _keyGenerationTask if active', () => {
+		let keyGenerator;
+		beforeEach(() => {
+			publicKeyStoreMock.expects('_storePublicKey')
+				.resolves();
 
-			keyGenerator._currentPrivateKey = exampleKeys.jwk(TEST_UUID).private_key;
-			keyGenerator._keyGenerationTask = Promise.resolve();
+			keyGenerator = createKeyGenerator();
+		});
+
+		it('returns proper private key after yielding _keyGenerationTask if active', () => {
+			keyGenerator._keyGenerationTask = Promise.resolve(exampleKeys.jwk(TEST_UUID).private_key);
 
 			return keyGenerator.getCurrentPrivateKey()
 				.then((result) => assert.deepEqual(result, exampleKeys.jwk(TEST_UUID).private_key));
@@ -105,7 +148,6 @@ describe('KeyGenerator', () => {
 		});
 
 		it('returns proper private key when _keyGenerationTask is not active', () => {
-
 			keyGenerator._currentPrivateKey = exampleKeys.jwk(TEST_UUID).private_key;
 			keyGenerator._keyGenerationTask = undefined;
 
@@ -116,6 +158,11 @@ describe('KeyGenerator', () => {
 	});
 
 	describe('getJwks(...)', () => {
+		beforeEach(() => {
+			publicKeyStoreMock.expects('_storePublicKey')
+				.resolves();
+		});
+
 		it('returns all found public keys', () => {
 
 			publicKeyStoreMock.expects('_lookupPublicKeys')
@@ -133,6 +180,8 @@ describe('KeyGenerator', () => {
 						kid: '456'
 					})
 				]);
+
+			const keyGenerator = createKeyGenerator();
 
 			return keyGenerator.getJwks()
 				.then((result) => assert.deepEqual(result, {
@@ -156,9 +205,10 @@ describe('KeyGenerator', () => {
 		});
 
 		it('returns [] when undefined', () => {
-
 			publicKeyStoreMock.expects('_lookupPublicKeys')
 				.resolves(undefined);
+
+			const keyGenerator = createKeyGenerator();
 
 			return keyGenerator.getJwks()
 				.then((result) => assert.deepEqual(result, {

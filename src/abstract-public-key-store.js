@@ -1,7 +1,6 @@
 'use strict';
 
 const
-	SigningKey = require('./signing-key'),
 	assert = require('assert');
 
 class AbstractPublicKeyStore {
