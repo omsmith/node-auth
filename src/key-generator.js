@@ -23,19 +23,18 @@ function KeyGenerator(opts) {
 	this._publicKeyStore = opts.publicKeyStore;
 
 	this.signingKeyAge = opts.signingKeyAge || DEFAULT_SIGNING_KEY_AGE;
-	assert(this.signingKeyAge > 0, 'signingKeyAge must be non-negative');
+	assert(this.signingKeyAge > 0, 'signingKeyAge must be positive');
 
 	this.signingKeyOverlap = opts.signingKeyOverlap || DEFAULT_SIGNING_KEY_OVERLAP;
-	assert(this.signingKeyOverlap > 0, 'signingKeyOverlap must be non-negative');
+	assert(this.signingKeyOverlap > 0, 'signingKeyOverlap must be positive');
 
 	assert(SIGNING_KEY_TYPE_RSA === opts.signingKeyType, 'Only "RSA" is supported currently');
-	assert(opts.rsa, 'Missing RSA-specific options');
 
 	this.rsaSettings = {
-		signingKeySize: opts.rsa.signingKeySize || DEFAULT_RSA_SIGNING_KEY_SIZE
+		signingKeySize: opts.rsa && opts.rsa.signingKeySize || DEFAULT_RSA_SIGNING_KEY_SIZE
 	};
 
-	assert(this.rsaSettings.signingKeySize > 0, 'signingKeySize must be non-negative');
+	assert(this.rsaSettings.signingKeySize > 0, 'signingKeySize must be positive');
 
 	this._keyGenerationTask = null;
 	this._currentPrivateKey = null;

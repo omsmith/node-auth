@@ -5,6 +5,7 @@ const
 	sinon = require('sinon'),
 	assert = require('assert'),
 	AbstractPublicKeyStore = require('../src/abstract-public-key-store'),
+	DummyPublicKeyStore = require('./dummy-public-key-store'),
 	exampleKeys = require('./static/example-keys');
 
 require('sinon-as-promised');
@@ -17,16 +18,6 @@ const
 	TEST_RSA_SIGNING_KEY_SIZE = 1024,
 
 	TEST_UUID = '1234';
-
-class DummyPublicKeyStore extends AbstractPublicKeyStore {
-	_storePublicKey() {
-		throw '_storePublicKey must be mocked out';
-	}
-
-	_lookupPublicKeys() {
-		throw '_lookupPublicKeys must be mocked out';
-	}
-}
 
 const
 	dummyPublicKeyStore = new DummyPublicKeyStore();
