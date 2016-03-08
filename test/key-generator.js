@@ -81,33 +81,21 @@ describe('KeyGenerator', () => {
 	});
 
 	describe('_generateNewKeys(...)', () => {
-		it('stores public key with a proper timeout right a way', () => {
+		beforeEach(() => {
+			const CURRENT_TIME_MS = 25000;
+			clock.tick(CURRENT_TIME_MS);
+
 			publicKeyStoreMock.expects('_storePublicKey')
 				.withArgs(JSON.stringify(exampleKeys.jwk(TEST_UUID).public_key),
-				TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP)
+				Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP)
 				.resolves();
-
-			createKeyGenerator();
 		});
 
-		it('stores public key with a proper timeout in 5 seconds', () => {
-			let TICK_MS = 5;
-			clock.tick(TICK_MS);
-
-			publicKeyStoreMock.expects('_storePublicKey')
-				.withArgs(JSON.stringify(exampleKeys.jwk(TEST_UUID).public_key),
-				Math.round(TICK_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP)
-				.resolves();
-
+		it('calls _storePublicKey with proper parameters', () => {
 			createKeyGenerator();
 		});
 
 		it('initializes _keyGenerationTask', () => {
-			publicKeyStoreMock.expects('_storePublicKey')
-				.withArgs(JSON.stringify(exampleKeys.jwk(TEST_UUID).public_key),
-				TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP)
-				.resolves();
-
 			const keyGenerator = createKeyGenerator();
 			assert(keyGenerator._keyGenerationTask);
 
@@ -118,7 +106,22 @@ describe('KeyGenerator', () => {
 			});
 		});
 
+		it('_keyGenerationTask resets itself', () => {
+			const keyGenerator = createKeyGenerator();
 
+			return keyGenerator._keyGenerationTask.then(() => {
+				assert(undefined === keyGenerator._keyGenerationTask);
+			});
+		});
+
+		it('_keyGenerationTask resolves _currentPrivateKey', () => {
+			const keyGenerator = createKeyGenerator();
+
+			return keyGenerator._keyGenerationTask.then(() => {
+				assert.deepEqual(keyGenerator._currentPrivateKey,
+					exampleKeys.jwk(TEST_UUID).private_key);
+			});
+		});
 	});
 
 	describe('getCurrentPrivateKey(...)', () => {
@@ -130,7 +133,7 @@ describe('KeyGenerator', () => {
 			keyGenerator = createKeyGenerator();
 		});
 
-		it('returns proper private key after yielding _keyGenerationTask if active', () => {
+		it('returns proper private key when _keyGenerationTask if defined', () => {
 			keyGenerator._keyGenerationTask = Promise.resolve(exampleKeys.jwk(TEST_UUID).private_key);
 
 			return keyGenerator.getCurrentPrivateKey()
@@ -138,7 +141,7 @@ describe('KeyGenerator', () => {
 
 		});
 
-		it('returns proper private key when _keyGenerationTask is not active', () => {
+		it('returns proper private key when _keyGenerationTask is not defined', () => {
 			keyGenerator._currentPrivateKey = exampleKeys.jwk(TEST_UUID).private_key;
 			keyGenerator._keyGenerationTask = undefined;
 
