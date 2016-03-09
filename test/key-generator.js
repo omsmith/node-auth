@@ -4,7 +4,6 @@ const
 	rewire = require('rewire'),
 	sinon = require('sinon'),
 	assert = require('assert'),
-	AbstractPublicKeyStore = require('../src/abstract-public-key-store'),
 	DummyPublicKeyStore = require('./dummy-public-key-store'),
 	exampleKeys = require('./static/example-keys');
 
@@ -23,7 +22,7 @@ const
 	dummyPublicKeyStore = new DummyPublicKeyStore();
 
 describe('KeyGenerator', () => {
-	let keyGenerator, publicKeyStoreMock, revertUuid, sandbox, clock, KeyGenerator;
+	let publicKeyStoreMock, revertUuid, sandbox, clock, KeyGenerator;
 
 	beforeEach(() => {
 		clock = sinon.useFakeTimers(),
@@ -45,7 +44,7 @@ describe('KeyGenerator', () => {
 		sandbox.restore();
 	});
 
-	function createKeyGenerator(){
+	function createKeyGenerator() {
 		return new KeyGenerator({
 			publicKeyStore: dummyPublicKeyStore,
 			signingKeyAge: TEST_SIGNING_KEY_AGE,
@@ -63,7 +62,7 @@ describe('KeyGenerator', () => {
 			generateNewKeysSpy = sinon.spy();
 			KeyGenerator.__set__('KeyGenerator.prototype._generateNewKeys', generateNewKeysSpy);
 			createKeyGenerator();
-		})
+		});
 
 		it('calls _generateNewKeys right a way', () => {
 			assert(generateNewKeysSpy.calledOnce);
