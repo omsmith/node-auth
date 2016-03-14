@@ -1,0 +1,31 @@
+{
+  "name": "node-auth-jwks",
+  "version": "1.0.0",
+  "description": "JSON Web Key Management Library for Node.JS services",
+  "main": "src/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "istanbul cover -R ./node_modules/mocha/bin/_mocha -- --recursive ./test",
+    "check-style": "eslint ."
+  },
+  "author": "D2L Corporation",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "eslint": "1.6.0",
+    "eslint-config-brightspace": "0.0.2",
+    "istanbul": "0.4.0",
+    "mocha": "2.4.5",
+    "rewire": "2.5.1",
+    "should": "7.1.1",
+    "sinon": "1.17.3",
+    "sinon-as-promised": "4.0.0"
+  },
+  "dependencies": {
+    "base64-url": "1.2.1",
+    "parse-asn1": "5.0.0",
+    "rsa-keygen": "1.0.5",
+    "uuid": "2.0.1"
+  }
+}

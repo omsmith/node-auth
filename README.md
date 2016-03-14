@@ -1,3 +1,82 @@
-﻿# node-auth-jwks
+# node-auth-jwks
 
-Extracted from https://github.com/Brightspace/valence-auth-server originally written by Owen Smith.
+Key generation/storage/retrieval logic.
+Initial version extracted from https://github.com/Brightspace/valence-auth-server originally written by Owen Smith.
+
+## Roadmap
+- [x] Core key generation/storage/retrieval logic
+- [x] RSA keys
+- [ ] ECDsa keys
+- [ ] Continuous integration testing (TravisCI?)
+
+## Usage
+
+**Step 1**. Implement the interface defined by `AbstractPublicKeyStore`:
+
+```javascript
+const
+	AbstractPublicKeyStore = require('node-auth-jwks').AbstractPublicKeyStore;
+
+class RedisPublicKeyStore extends AbstractPublicKeyStore {
+	constructor (redisClient) {
+		super();
+		// initialization
+	}
+
+	_storePublicKey (key, expiry) {
+		// returns a Promise
+	}
+
+	_lookupPublicKeys() {
+		// returns a Promise wrapping all non-expired public keys
+	}
+}
+```
+
+**Step 2**. Instantiate `KeyGenerator`:
+
+```javascript
+const
+	NodeAuthJwks = require('node-auth-jwks'),
+
+	const keyGenerator = new NodeAuthJwks.KeyGenerator({
+		signingKeyType: 'RSA',
+		// other settings
+		publicKeyStore: new RedisPublicKeyStore(...)
+	});
+```
+
+**Step 3**. Expose a route for public key retrieval using a routing framework
+of your choice. The route will be called by D2L Auth Service. Note that your service must be known by the Auth service (present in its DB).
+
+```javascript
+
+const
+	router = require('koa-router')(),
+
+router.get('/auth/.well-known/jwks', function() {
+	return keyGenerator.getJwks()
+		.then((keys) => {
+			this.body = keys;
+		});
+});
+
+app.use(router.routes());
+
+```
+**Step 4**. Instantiate `NodeAuthProvisioner`
+(https://github.com/Brightspace/node-auth-provisioning) providing
+`keyGenerator.getCurrentPrivateKey` as a `keyLookup` function:
+
+```javascript
+const
+	AuthTokenProvisioner = require('@d2l/brightspace-auth-provisioning');
+
+const provisioner = new AuthTokenProvisioner({
+	...
+	keyLookup: keyGenerator.getCurrentPrivateKey.bind(keyGenerator),
+	...
+});
+```
+Now you are able to call `provisioner.provisionToken(...)`.
+
