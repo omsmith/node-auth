@@ -85,17 +85,20 @@ Now you are able to call `provisioner.provisionToken(...)`.
 ```javascript
 const keyGenerator = new NodeAuthJwks.KeyGenerator({
 	signingKeyType: 'RSA',							// A type of signing keys to generate. For now, only 'RSA'
-	signingKeyAge: <positive integer, seconds>,		// For how long a generated pair of private/public keys remains active
-													// Inactive keys expire, and a new key pair is generated
-													// Default: 1 hour
-	signingKeyOverlap: <positive integer, seconds>,	// An additional overlap period for an old public key to remain active
-													// Default: 5 mins
+	signingKeyAge: <integer, sec>,		// For how long a generated pair of private/public keys remains active
+										// Inactive keys expire, and a new key pair is generated
+										// Default: 1 hour
+	signingKeyOverlap: <integer, sec>,	// An additional overlap period for an old public key to remain active
+										// Default: 5 mins
 
 	// RSA-specific settings:
 	rsa: {
-		signingKeySize: <positive integer, bits>	// A size of an RSA key to generate. Default: 1024 bits
+		signingKeySize: <integer, bits>	// A size of an RSA key to generate. Default: 1024 bits
 	},
 	
-	publicKeyStore: new RedisPublicKeyStore(...)	// a backend for storing public keys. Can be anything: Redis, MSSQL, PostgreSQL.
+	publicKeyStore: new RedisPublicKeyStore(...)	// A backend for storing public keys. 
+													// Can be anything: Redis, MSSQL, PostgreSQL, etc.
+													// See "node-auth-provisioning-postgresql" for 
+													// the PostgreSQL backed.
 });
 ```
