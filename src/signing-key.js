@@ -34,7 +34,7 @@ function fixHexLength(hexStr) {
 }
 
 SigningKey.fromPem = function(pem, kid) {
-	assert(pem instanceof Buffer);
+	assert('string' === typeof pem);
 	assert('string' === typeof kid);
 
 	const parsedPem = parseAsn1(pem);
@@ -49,8 +49,7 @@ SigningKey.fromPem = function(pem, kid) {
 	e = new Buffer(e, 'hex');
 	e = base64Url.encode(e);
 
-	const res = new SigningKey(n, e, pem.toString(), kid);
-	return res;
+	return new SigningKey(n, e, pem, kid);
 };
 
 module.exports = SigningKey;
