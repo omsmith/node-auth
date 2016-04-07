@@ -13,8 +13,8 @@
   "author": "D2L Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "eslint": "1.6.0",
-    "eslint-config-brightspace": "0.0.2",
+    "eslint": "2.7.0",
+    "eslint-config-brightspace": "0.2.0",
     "istanbul": "0.4.0",
     "mocha": "2.4.5",
     "rewire": "2.5.1",
