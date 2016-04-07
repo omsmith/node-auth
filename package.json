@@ -24,8 +24,8 @@
   },
   "dependencies": {
     "base64-url": "1.2.1",
+    "node-rsa": "0.3.2",
     "parse-asn1": "5.0.0",
-    "rsa-keygen": "1.0.5",
     "uuid": "2.0.1"
   }
 }

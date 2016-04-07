@@ -21,6 +21,19 @@ const
 const
 	dummyPublicKeyStore = new DummyPublicKeyStore();
 
+class NodeRSAMock {
+	exportKey(type) {
+		switch (type) {
+			case 'pkcs1-private-pem':
+				return exampleKeys.pem().private_key;
+			case 'pkcs1-public-pem':
+				return exampleKeys.pem().public_key;
+			default:
+				throw new Error('exportKey called with unexpected arguments');
+		}
+	}
+}
+
 describe('KeyGenerator', () => {
 	let publicKeyStoreMock, revertUuid, sandbox, clock, KeyGenerator;
 
@@ -31,10 +44,7 @@ describe('KeyGenerator', () => {
 		revertUuid = KeyGenerator.__set__('uuid', () => TEST_UUID);
 		publicKeyStoreMock = sandbox.mock(dummyPublicKeyStore);
 
-		sandbox.stub(KeyGenerator.__get__('rsaKeygen'), 'generate', () => {
-			return exampleKeys.pem();
-		});
-
+		KeyGenerator.__set__('NodeRSA', NodeRSAMock);
 	});
 
 	afterEach(() => {

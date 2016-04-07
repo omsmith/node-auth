@@ -2,7 +2,7 @@
 
 var
 	SigningKey = require('./signing-key'),
-	rsaKeygen = require('rsa-keygen'),
+	NodeRSA = require('node-rsa'),
 	uuid = require('uuid');
 
 const assert = require('assert');
@@ -45,11 +45,11 @@ function KeyGenerator(opts) {
 }
 
 KeyGenerator.prototype._generateNewKeys = function _generateNewKeys() {
-	const keypair = rsaKeygen.generate(this.rsaSettings.signingKeySize);
+	const rsaKey = new NodeRSA({ b: this.rsaSettings.signingKeySize }); // b: key size in bits
 	const kid = uuid();
 
-	const privateKey = SigningKey.fromPem(keypair.private_key, kid);
-	const publicKey = SigningKey.fromPem(keypair.public_key, kid);
+	const privateKey = SigningKey.fromPem(rsaKey.exportKey('pkcs1-private-pem'), kid);
+	const publicKey = SigningKey.fromPem(rsaKey.exportKey('pkcs1-public-pem'), kid);
 
 	const expiry = clock() + this.signingKeyAge + this.signingKeyOverlap;
 
