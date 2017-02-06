@@ -64,6 +64,14 @@ context.
 The tenant UUID this token belongs to. Not present outside of user and tenant
 contexts.
 
+---
+
+#### `.actualUser` -> `String|Undefined`
+
+The identifier for the acting user. For convenience, this will always be the
+same as `user` except in the case of impersonation. Not present outside of
+user context.
+
 ___
 
 #### `.isGlobalContext()` -> `Boolean`
@@ -75,6 +83,10 @@ ___
 ---
 
 #### `.isUserContext()` -> `Boolean`
+
+---
+
+#### `.isImpersonating()` -> `Boolean`
 
 ---
 
