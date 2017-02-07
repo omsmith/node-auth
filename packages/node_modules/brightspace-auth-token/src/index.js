@@ -20,6 +20,9 @@ function BrightspaceAuthToken(decodedPayload, source) {
 	this.source = source;
 	this.tenant = decodedPayload.tenantid;
 	this.user = decodedPayload.sub;
+	this.actualUser = decodedPayload.actualsub !== undefined
+		? decodedPayload.actualsub
+		: this.user;
 }
 
 BrightspaceAuthToken.prototype.isGlobalContext = function isGlobalContext() {
@@ -35,6 +38,10 @@ BrightspaceAuthToken.prototype.isTenantContext = function isTenantContext() {
 BrightspaceAuthToken.prototype.isUserContext = function isUserContext() {
 	// calls getter
 	return contexts.User === this.context;
+};
+
+BrightspaceAuthToken.prototype.isImpersonating = function isImpersonating() {
+	return this.isUserContext() && this.user !== this.actualUser;
 };
 
 Object.defineProperty(BrightspaceAuthToken.prototype, 'context', {

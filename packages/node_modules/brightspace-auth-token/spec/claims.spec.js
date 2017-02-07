@@ -38,4 +38,29 @@ describe('Claims', function() {
 			expect(token.tenant).to.be.undefined;
 		});
 	});
+
+	describe('actualUser', function() {
+		it('should expose "actualsub"', function() {
+			const token = new BrightspaceAuthToken({
+				sub: '123',
+				actualsub: '456'
+			}, 'x.y.z');
+
+			expect(token.actualUser).to.equal('456');
+		});
+
+		it('should expose "sub" when "actualsub" is not available', function() {
+			const token = new BrightspaceAuthToken({
+				sub: '123'
+			}, 'x.y.z');
+
+			expect(token.actualUser).to.equal('123');
+		});
+
+		it('should be "undefined" when there is no "sub" or "actualsub"', function() {
+			const token = new BrightspaceAuthToken({}, 'x.y.z');
+
+			expect(token.actualUser).to.be.undefined;
+		});
+	});
 });
