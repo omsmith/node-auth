@@ -259,7 +259,7 @@ describe('KeyGenerator', () => {
 
 		it('should return all public keys returned from the store, transforming old format', () => {
 			sandbox
-				.stub(dummyPublicKeyStore, 'lookupPublicKeys')
+				.stub(dummyPublicKeyStore, '_lookupPublicKeys')
 				.resolves([
 					JSON.stringify({
 						n: 'some-n-1',
@@ -267,7 +267,8 @@ describe('KeyGenerator', () => {
 						kid: '123',
 						kty: 'RSA',
 						use: 'sig',
-						exp: 123
+						exp: 123,
+						alg: 'RS256'
 					}),
 					JSON.stringify({
 						n: 'some-n-2',
@@ -282,7 +283,8 @@ describe('KeyGenerator', () => {
 						kty: 'EC',
 						crv: 'P-384',
 						use: 'sig',
-						exp: 456
+						exp: 456,
+						alg: 'ES384'
 					})
 				]);
 
@@ -296,14 +298,16 @@ describe('KeyGenerator', () => {
 							use: 'sig',
 							kty: 'RSA',
 							kid: '123',
-							exp: 123
+							exp: 123,
+							alg: 'RS256'
 						},
 						{
 							n: 'some-n-2',
 							e: 'some-e-2',
 							use: 'sig',
 							kty: 'RSA',
-							kid: '456'
+							kid: '456',
+							alg: 'RS256'
 							// unfortunately can't infer exp
 						},
 						{
@@ -313,7 +317,8 @@ describe('KeyGenerator', () => {
 							use: 'sig',
 							kty: 'EC',
 							crv: 'P-384',
-							exp: 456
+							exp: 456,
+							alg: 'ES384'
 						}
 					]
 				}));

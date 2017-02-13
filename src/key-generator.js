@@ -77,29 +77,12 @@ KeyGenerator.prototype.getCurrentPrivateKey = function getCurrentPrivateKey() {
 };
 
 KeyGenerator.prototype.getJwks = function getJwks() {
-	return this._publicKeyStore.lookupPublicKeys()
+	return this
+		._publicKeyStore
+		.lookupPublicKeys()
 		.then(keys => {
-			assert(Array.isArray(keys));
-
-			const jwks = keys
-				.map(JSON.parse)
-				.map((key) => {
-					if (!key.use || !key.kty) {
-						// Stored from a previous version of node-auth-jwks
-						return {
-							n: key.n,
-							e: key.e,
-							kid: key.kid,
-							use: 'sig',
-							kty: 'RSA'
-						};
-					}
-
-					return key;
-				});
-
 			return {
-				keys: jwks
+				keys
 			};
 		});
 };
