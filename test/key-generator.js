@@ -37,7 +37,10 @@ describe('KeyGenerator', () => {
 			publicKeyStore: dummyPublicKeyStore,
 			signingKeyAge: TEST_SIGNING_KEY_AGE,
 			signingKeyOverlap: TEST_SIGNING_KEY_OVERLAP,
-			signingKeyType: 'RSA',
+			signingKeyType: 'EC',
+			ec: {
+				crv: 'P-256'
+			},
 			rsa: {
 				signingKeySize: 1024
 			}
