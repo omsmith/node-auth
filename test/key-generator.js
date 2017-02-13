@@ -160,8 +160,10 @@ describe('KeyGenerator', () => {
 
 				sinon.assert.calledWith(
 					dummyPublicKeyStore.storePublicKey,
-					sinon.match({ kty: 'RSA' }),
-					Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
+					sinon.match({
+						kty: 'RSA',
+						exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
+					})
 				);
 			});
 		});
@@ -180,8 +182,10 @@ describe('KeyGenerator', () => {
 
 				sinon.assert.calledWith(
 					dummyPublicKeyStore.storePublicKey,
-					sinon.match({ kty: 'EC' }),
-					Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
+					sinon.match({
+						kty: 'EC',
+						exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
+					})
 				);
 			});
 		});
@@ -262,7 +266,8 @@ describe('KeyGenerator', () => {
 						e: 'some-e-1',
 						kid: '123',
 						kty: 'RSA',
-						use: 'sig'
+						use: 'sig',
+						exp: 123
 					}),
 					JSON.stringify({
 						n: 'some-n-2',
@@ -276,7 +281,8 @@ describe('KeyGenerator', () => {
 						kid: '789',
 						kty: 'EC',
 						crv: 'P-384',
-						use: 'sig'
+						use: 'sig',
+						exp: 456
 					})
 				]);
 
@@ -289,7 +295,8 @@ describe('KeyGenerator', () => {
 							e: 'some-e-1',
 							use: 'sig',
 							kty: 'RSA',
-							kid: '123'
+							kid: '123',
+							exp: 123
 						},
 						{
 							n: 'some-n-2',
@@ -297,6 +304,7 @@ describe('KeyGenerator', () => {
 							use: 'sig',
 							kty: 'RSA',
 							kid: '456'
+							// unfortunately can't infer exp
 						},
 						{
 							x: 'some-x-1',
@@ -304,7 +312,8 @@ describe('KeyGenerator', () => {
 							kid: '789',
 							use: 'sig',
 							kty: 'EC',
-							crv: 'P-384'
+							crv: 'P-384',
+							exp: 456
 						}
 					]
 				}));
