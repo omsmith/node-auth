@@ -211,7 +211,7 @@ describe('KeyGenerator', () => {
 			it('which sets and resolves to _currentPrivateKey', () => {
 				assert.strictEqual(null, keygen._currentPrivateKey);
 				return keygen._keyGenerationTask.then(val => {
-					assert.strictEqual('string', typeof keygen._currentPrivateKey);
+					assert.strictEqual('object', typeof keygen._currentPrivateKey);
 					assert.strictEqual(keygen._currentPrivateKey, val);
 				});
 			});

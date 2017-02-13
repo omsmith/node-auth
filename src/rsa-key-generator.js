@@ -10,7 +10,7 @@ var NodeRSA = require('node-rsa');
 function fixHexLength(hexStr) {
 	if (hexStr.length % 2 === 0) {
 		return hexStr;
-	}   
+	}
 
 	return '0' + hexStr;
 }
@@ -34,7 +34,7 @@ function pemToJwk(kid, pem) {
 		kid,
 		kty: 'RSA',
 		use: 'sig'
-	};	
+	};
 }
 
 function keygen(size, kid) {
@@ -47,7 +47,11 @@ function keygen(size, kid) {
 
 	return {
 		jwk,
-		pem
+		signingKey: {
+			kid,
+			pem,
+			alg: 'RS256'
+		}
 	};
 }
 

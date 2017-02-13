@@ -28,10 +28,13 @@ describe('EC', () => {
 	describe('keygen', () => {
 		for (const crv of ['P-256', 'P-384', 'P-521']) {
 			describe(crv, () => {
-				it('should return the private pem as "pem" property', () => {
-					const key = keygen(crv, TEST_UUID);
+				it('should return the signing key as "signingKey" property', () => {
+					const signingKey = keygen(crv, TEST_UUID).signingKey;
 
-					assert.strictEqual(typeof key.pem, 'string');
+					assert.strictEqual(typeof signingKey, 'object');
+					assert.strictEqual(signingKey.kid, TEST_UUID);
+					assert.strictEqual(typeof signingKey.pem, 'string');
+					assert.strictEqual(signingKey.alg, { 'P-256': 'ES256', 'P-384': 'ES384', 'P-521': 'ES512' }[crv]);
 				});
 
 				it('should return a public JWK as "jwk" property with provided kid', () => {

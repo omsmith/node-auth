@@ -57,10 +57,13 @@ describe('RSA', () => {
 	});
 
 	describe('keygen', () => {
-		it('should return the private pem as "pem" property', () => {
-			const key = keygen(TEST_RSA_SIGNING_KEY_SIZE, TEST_UUID);
+		it('should return the signing key as "signingKey" property', () => {
+			const signingKey = keygen(TEST_RSA_SIGNING_KEY_SIZE, TEST_UUID).signingKey;
 
-			assert.strictEqual(key.pem, exampleKeys.pem().private_key);
+			assert.strictEqual(typeof signingKey, 'object');
+			assert.strictEqual(signingKey.kid, TEST_UUID);
+			assert.strictEqual(signingKey.pem, exampleKeys.pem().private_key);
+			assert.strictEqual(signingKey.alg, 'RS256');
 		});
 
 		it('should return a public JWK as "jwk" property with provided kid', () => {

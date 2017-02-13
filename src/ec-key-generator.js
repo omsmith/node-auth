@@ -4,6 +4,12 @@ const base64url = require('base64-url').escape;
 const elliptic = require('elliptic');
 const jwkToPem = require('jwk-to-pem');
 
+const CRV_TO_ALG = {
+	'P-256': 'ES256',
+	'P-384': 'ES384',
+	'P-521': 'ES512'
+}
+
 function b64(val, zero) {
 	var buf = new Buffer(val.toString('hex', 2), 'hex');
 	val = base64url(buf.toString('base64'));
@@ -30,6 +36,7 @@ function crvToEc(crv) {
 	}
 }
 
+
 function keygen(crv, kid) {
 	const keypair = crvToEc(crv).genKeyPair();
 
@@ -52,7 +59,11 @@ function keygen(crv, kid) {
 
 	return {
 		jwk,
-		pem
+		signingKey: {
+			kid,
+			pem,
+			alg: CRV_TO_ALG[crv]
+		}
 	};
 }
 

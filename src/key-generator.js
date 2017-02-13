@@ -64,7 +64,7 @@ KeyGenerator.prototype._generateNewKeys = function _generateNewKeys() {
 		._publicKeyStore
 		.storePublicKey(key.jwk, expiry)
 		.then(() => {
-			this._currentPrivateKey = key.pem;
+			this._currentPrivateKey = key.signingKey;
 			this._keyGenerationTask = undefined;
 			return this._currentPrivateKey;
 		});
