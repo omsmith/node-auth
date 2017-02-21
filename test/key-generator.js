@@ -162,6 +162,7 @@ describe('KeyGenerator', () => {
 					dummyPublicKeyStore.storePublicKey,
 					sinon.match({
 						kty: 'RSA',
+						alg: 'RS256',
 						exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
 					})
 				);
@@ -184,6 +185,7 @@ describe('KeyGenerator', () => {
 					dummyPublicKeyStore.storePublicKey,
 					sinon.match({
 						kty: 'EC',
+						alg: sinon.match(/^ES\d\d\d$/),
 						exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
 					})
 				);
