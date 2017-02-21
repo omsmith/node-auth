@@ -20,8 +20,8 @@ class AbstractPublicKeyStore {
 			});
 	}
 
-	storePublicKey(key, expiry) {
-		return this._storePublicKey(JSON.stringify(key), expiry);
+	storePublicKey(key) {
+		return this._storePublicKey(JSON.stringify(key), key.exp);
 	}
 }
 

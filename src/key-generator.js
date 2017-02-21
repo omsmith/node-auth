@@ -58,11 +58,11 @@ function KeyGenerator(opts) {
 
 KeyGenerator.prototype._generateNewKeys = function _generateNewKeys() {
 	const key = this.keygen(uuid());
-	const expiry = clock() + this.signingKeyAge + this.signingKeyOverlap;
+	key.jwk.exp = clock() + this.signingKeyAge + this.signingKeyOverlap;
 
 	this._keyGenerationTask = this
 		._publicKeyStore
-		.storePublicKey(key.jwk, expiry)
+		.storePublicKey(key.jwk)
 		.then(() => {
 			this._currentPrivateKey = key.signingKey;
 			this._keyGenerationTask = undefined;
