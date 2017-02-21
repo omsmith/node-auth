@@ -14,14 +14,13 @@
   "author": "D2L Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "eslint": "2.7.0",
-    "eslint-config-brightspace": "0.2.0",
-    "istanbul": "0.4.0",
-    "mocha": "2.4.5",
+    "eslint": "^3.16.0",
+    "eslint-config-brightspace": "^0.2.4",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
     "rewire": "^2.5.2",
-    "should": "7.1.1",
-    "sinon": "1.17.3",
-    "sinon-as-promised": "4.0.0",
+    "sinon": "^1.17.7",
+    "sinon-as-promised": "^4.0.2",
     "xtend": "^4.0.1"
   },
   "dependencies": {

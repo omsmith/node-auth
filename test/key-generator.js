@@ -196,10 +196,9 @@ describe('KeyGenerator', () => {
 			let keygen = null;
 			beforeEach(done => {
 				keygen = createKeyGenerator();
-				return keygen._keyGenerationTask.then(() => {
+				keygen._keyGenerationTask.then(() => {
 					keygen._keyGenerationTask = undefined;
 					keygen._currentPrivateKey = null;
-//					dummyPublicKeyStore.storePublicKey.reset();
 					keygen._generateNewKeys();
 					done();
 				});
