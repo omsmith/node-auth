@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const uuid = require('uuid');
+const uuid = require('uuid/v4');
 
 const AbstractPublicKeyStore = require('./abstract-public-key-store');
 const ecKeygen = require('./ec-key-generator');
