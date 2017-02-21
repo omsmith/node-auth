@@ -1,7 +1,8 @@
 'use strict';
 
-const
-	assert = require('assert');
+const assert = require('assert');
+
+const PublicKeyNotFoundError = require('../errors/public-key-not-found');
 
 function arrayOrEmpty(arr) {
 	return Array.isArray(arr)
@@ -47,6 +48,20 @@ class AbstractPublicKeyStore {
 			.then(arrayOrEmpty)
 			.then(parseKeys)
 			.then(transformKeys);
+	}
+
+	lookupPublicKey(kid) {
+		return this
+			.lookupPublicKeys()
+			.then(keys => {
+				for (const key of keys) {
+					if (key.kid === kid) {
+						return key;
+					}
+				}
+
+				throw new PublicKeyNotFoundError(kid);
+			});
 	}
 
 	storePublicKey(key) {

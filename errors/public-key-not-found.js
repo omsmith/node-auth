@@ -1,0 +1,27 @@
+'use strict';
+
+const kKid = Symbol('kid');
+
+class PublicKeyNotFoundError extends Error {
+	constructor(kid) {
+		super(`Public key with id "${kid}" not found.`);
+
+		this[kKid] = kid;
+
+		Error.captureStackTrace(this, PublicKeyNotFoundError);
+	}
+
+	get name() {
+		return 'PublicKeyNotFoundError';
+	}
+
+	get status() {
+		return 404;
+	}
+
+	get kid() {
+		return this[kKid];
+	}
+}
+
+module.exports = PublicKeyNotFoundError;
