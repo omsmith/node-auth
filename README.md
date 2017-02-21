@@ -6,7 +6,7 @@ Initial version extracted from https://github.com/Brightspace/valence-auth-serve
 ## Roadmap
 - [x] Core key generation/storage/retrieval logic
 - [x] RSA keys
-- [ ] ECDSA keys
+- [x] ECDSA keys
 - [ ] Continuous integration testing (TravisCI?)
 
 ## Usage
@@ -84,7 +84,7 @@ Now you are able to call `provisioner.provisionToken(...)`.
 
 ```javascript
 const keyGenerator = new NodeAuthJwks.KeyGenerator({
-	signingKeyType: 'RSA',							// A type of signing keys to generate. For now, only 'RSA'
+	signingKeyType: 'RSA',				// A type of signing keys to generate. 'RSA' or 'EC'
 	signingKeyAge: <integer, sec>,		// For how long a generated pair of private/public keys remains active
 										// Inactive keys expire, and a new key pair is generated
 										// Default: 1 hour
@@ -94,6 +94,11 @@ const keyGenerator = new NodeAuthJwks.KeyGenerator({
 	// RSA-specific settings:
 	rsa: {
 		signingKeySize: <integer, bits>	// A size of an RSA key to generate. Default: 1024 bits
+	},
+
+	// EC-specific settings:
+	ec: {
+		crv: <String> // one of 'P-256', 'P-384', 'P-521'
 	},
 	
 	publicKeyStore: new RedisPublicKeyStore(...)	// A backend for storing public keys. 
