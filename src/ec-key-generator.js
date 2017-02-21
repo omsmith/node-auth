@@ -1,6 +1,6 @@
 'use strict';
 
-const base64url = require('base64-url').escape;
+const base64url = require('base64url').fromBase64;
 const elliptic = require('elliptic');
 const jwkToPem = require('jwk-to-pem');
 

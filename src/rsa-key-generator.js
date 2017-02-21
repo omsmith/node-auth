@@ -1,7 +1,7 @@
 'use strict';
 
 const assert = require('assert');
-const base64Url = require('base64-url');
+const base64url = require('base64url');
 const parseAsn1 = require('parse-asn1');
 
 // var to be rewireable in tests
@@ -21,12 +21,12 @@ function pemToJwk(kid, pem) {
 	let n = parsedPem.modulus.toString(16);
 	n = fixHexLength(n);
 	n = new Buffer(n, 'hex');
-	n = base64Url.encode(n);
+	n = base64url.encode(n);
 
 	let e = parsedPem.publicExponent.toString(16);
 	e = fixHexLength(e);
 	e = new Buffer(e, 'hex');
-	e = base64Url.encode(e);
+	e = base64url.encode(e);
 
 	return {
 		n,
