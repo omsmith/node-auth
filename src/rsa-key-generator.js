@@ -33,7 +33,8 @@ function pemToJwk(kid, pem) {
 		e,
 		kid,
 		kty: 'RSA',
-		use: 'sig'
+		use: 'sig',
+		alg: 'RS256'
 	};
 }
 

@@ -48,6 +48,7 @@ function keygen(crv, kid) {
 		use: 'sig',
 		kty: 'EC',
 		crv,
+		alg: CRV_TO_ALG[crv],
 		x: b64(pub.getX(), false),
 		y: b64(pub.getY(), false),
 		d: b64(priv, true)
