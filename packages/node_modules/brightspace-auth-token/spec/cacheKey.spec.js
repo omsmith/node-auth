@@ -3,7 +3,7 @@
 'use strict';
 
 const
-	uuid = require('uuid'),
+	uuid = require('uuid/v4'),
 	xtend = require('xtend');
 
 const expect = require('chai').expect;
