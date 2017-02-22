@@ -57,17 +57,22 @@ function KeyGenerator(opts) {
 }
 
 KeyGenerator.prototype._generateNewKeys = function _generateNewKeys() {
-	const key = this.keygen(uuid());
-	key.jwk.exp = clock() + this.signingKeyAge + this.signingKeyOverlap;
-
 	this._keyGenerationTask = this
-		._publicKeyStore
-		.storePublicKey(key.jwk)
-		.then(() => {
-			this._currentPrivateKey = key.signingKey;
-			this._keyGenerationTask = undefined;
-			return this._currentPrivateKey;
+		.keygen(uuid())
+		.then(key => {
+			key.jwk.exp = clock() + this.signingKeyAge + this.signingKeyOverlap;
+
+			return this
+				._publicKeyStore
+				.storePublicKey(key.jwk)
+				.then(() => {
+					this._currentPrivateKey = key.signingKey;
+					this._keyGenerationTask = undefined;
+					return this._currentPrivateKey;
+				});
 		});
+
+	return this._keyGenerationTask;
 };
 
 KeyGenerator.prototype.getCurrentPrivateKey = function getCurrentPrivateKey() {

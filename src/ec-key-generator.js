@@ -1,8 +1,7 @@
 'use strict';
 
-const base64url = require('base64url').fromBase64;
-const elliptic = require('elliptic');
 const jwkToPem = require('jwk-to-pem');
+const generate = require('native-crypto/generate');
 
 const CRV_TO_ALG = {
 	'P-256': 'ES256',
@@ -10,62 +9,38 @@ const CRV_TO_ALG = {
 	'P-521': 'ES512'
 };
 
-function b64(val, zero) {
-	var buf = new Buffer(val.toString('hex', 2), 'hex');
-	val = base64url(buf.toString('base64'));
-	if (zero) {
-		buf.fill(0);
-	}
-	return val;
-}
-
-function crvToEc(crv) {
-	switch (crv) {
-		case 'P-256': {
-			return elliptic.ec('p256');
-		}
-		case 'P-384': {
-			return elliptic.ec('p384');
-		}
-		case 'P-521': {
-			return elliptic.ec('p521');
-		}
-		default: {
-			throw new Error(`Unknown curve: "${crv}". Must be one of "P-256", "P-384", "P-521"`);
-		}
-	}
-}
-
 function keygen(crv, kid) {
-	const keypair = crvToEc(crv).genKeyPair();
-
-	const priv = keypair.getPrivate();
-	const pub = keypair.getPublic();
-
-	const jwk = {
-		kid,
-		use: 'sig',
-		kty: 'EC',
-		crv,
-		alg: CRV_TO_ALG[crv],
-		x: b64(pub.getX(), false),
-		y: b64(pub.getY(), false),
-		d: b64(priv, true)
-	};
-
-	const pem = jwkToPem(jwk, { private: true });
-
-	jwk.d = undefined;
-
-	return {
-		jwk,
-		signingKey: {
-			kid,
-			pem,
-			alg: CRV_TO_ALG[crv]
-		}
-	};
+	return generate(crv)
+		.then(keypair => {
+			return Promise
+				.all([
+					keypair.publicKey,
+					jwkToPem(keypair.privateKey, { private: true })
+				]);
+		})
+		.then(res => {
+			return {
+				jwk: {
+					kid,
+					kty: res[0].kty,
+					crv: res[0].crv,
+					x: res[0].x,
+					y: res[0].y,
+					alg: CRV_TO_ALG[crv],
+					use: 'sig'
+				},
+				signingKey: {
+					kid,
+					pem: res[1],
+					alg: CRV_TO_ALG[crv]
+				}
+			};
+		});
 }
 
 module.exports = keygen;
-module.exports.validate = crvToEc;
+module.exports.validate = crv => {
+	if (!CRV_TO_ALG[crv]) {
+		throw new Error(`Unknown curve: "${crv}". Must be one of "P-256", "P-384", "P-521"`);
+	}
+};

@@ -1,59 +1,35 @@
 'use strict';
 
 const assert = require('assert');
-const base64url = require('base64url');
-const parseAsn1 = require('parse-asn1');
-
-// var to be rewireable in tests
-var NodeRSA = require('node-rsa');
-
-function fixHexLength(hexStr) {
-	if (hexStr.length % 2 === 0) {
-		return hexStr;
-	}
-
-	return '0' + hexStr;
-}
-
-function pemToJwk(kid, pem) {
-	const parsedPem = parseAsn1(pem);
-
-	let n = parsedPem.modulus.toString(16);
-	n = fixHexLength(n);
-	n = new Buffer(n, 'hex');
-	n = base64url.encode(n);
-
-	let e = parsedPem.publicExponent.toString(16);
-	e = fixHexLength(e);
-	e = new Buffer(e, 'hex');
-	e = base64url.encode(e);
-
-	return {
-		n,
-		e,
-		kid,
-		kty: 'RSA',
-		use: 'sig',
-		alg: 'RS256'
-	};
-}
+const jwkToPem = require('jwk-to-pem');
+const generate = require('native-crypto/generate');
 
 function keygen(size, kid) {
-	const key = new NodeRSA({
-		b: size // b: key size in bits
-	});
-
-	const pem = key.exportKey('pkcs1-private-pem');
-	const jwk = pemToJwk(kid, key.exportKey('pkcs1-public-pem'));
-
-	return {
-		jwk,
-		signingKey: {
-			kid,
-			pem,
-			alg: 'RS256'
-		}
-	};
+	return generate('RS256', size)
+		.then(keypair => {
+			return Promise
+				.all([
+					keypair.publicKey,
+					jwkToPem(keypair.privateKey, { private: true })
+				]);
+		})
+		.then(res => {
+			return {
+				jwk: {
+					kid,
+					kty: res[0].kty,
+					n: res[0].n,
+					e: res[0].e,
+					alg: 'RS256',
+					use: 'sig'
+				},
+				signingKey: {
+					kid,
+					pem: res[1],
+					alg: 'RS256'
+				}
+			};
+		});
 }
 
 module.exports = keygen;
