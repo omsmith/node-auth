@@ -132,4 +132,43 @@ describe('AbstractPublicKeyStore', () => {
 				);
 		});
 	});
+
+	describe('storePublicKey', () => {
+		it('should call implementation with stringified key and expiry', () => {
+			sandbox
+				.stub(dummyPublicKeyStore, '_storePublicKey')
+				.resolves();
+
+			return dummyPublicKeyStore
+				.storePublicKey({ kty: 'EC', exp: 123 })
+				.then(
+					() => {
+						sinon.assert.calledWith(
+							dummyPublicKeyStore._storePublicKey,
+							'{"kty":"EC","exp":123}',
+							123
+						);
+					},
+					() => assert(false)
+				);
+		});
+
+		it('should reject if implementation throws synchronously', () => {
+			const expectedError = new Error();
+			sandbox
+				.stub(dummyPublicKeyStore, '_storePublicKey')
+				.throws(expectedError);
+
+			try {
+				return dummyPublicKeyStore
+					.storePublicKey({ kty: 'EC', exp: 123 })
+					.then(
+						() => assert(false),
+						e => assert.strictEqual(e, expectedError)
+					);
+			} catch (e) {
+				assert(false);
+			}
+		});
+	});
 });
