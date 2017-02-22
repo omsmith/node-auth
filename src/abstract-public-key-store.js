@@ -65,7 +65,9 @@ class AbstractPublicKeyStore {
 	}
 
 	storePublicKey(key) {
-		return this._storePublicKey(JSON.stringify(key), key.exp);
+		return Promise
+			.resolve()
+			.then(() => this._storePublicKey(JSON.stringify(key), key.exp));
 	}
 }
 
