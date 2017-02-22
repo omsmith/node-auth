@@ -6,9 +6,11 @@ node_modules
 
 .editorconfig
 .eslintignore
-.eslintrc
+.eslintrc*
 
 .travis.yml
 .npmrc*
 
+test
 spec
+coverage
