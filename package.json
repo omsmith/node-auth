@@ -7,9 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npm run check-style && npm run unit",
     "check-style": "eslint .",
-    "unit": "istanbul cover -R ./node_modules/mocha/bin/_mocha -- --recursive ./test"
+    "pretest": "npm run check-style",
+    "test": "istanbul cover -R ./node_modules/mocha/bin/_mocha -- --recursive ./test"
   },
   "author": "D2L Corporation",
   "license": "Apache-2.0",
