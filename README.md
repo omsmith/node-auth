@@ -58,6 +58,12 @@ router.get('/auth/.well-known/jwks', function() {
 		.then(keys => this.body = { keys });
 });
 
+router.get('/auth/jwk/:kid', function(kid) {
+	return publicKeyStore
+		.lookupPublicKey(kid)
+		.then(key => this.body = key);
+});
+
 app.use(router.routes());
 
 ```
