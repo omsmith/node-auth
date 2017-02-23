@@ -81,15 +81,4 @@ KeyGenerator.prototype.getCurrentPrivateKey = function getCurrentPrivateKey() {
 		: Promise.resolve(this._currentPrivateKey);
 };
 
-KeyGenerator.prototype.getJwks = function getJwks() {
-	return this
-		._publicKeyStore
-		.lookupPublicKeys()
-		.then(keys => {
-			return {
-				keys
-			};
-		});
-};
-
 module.exports = KeyGenerator;

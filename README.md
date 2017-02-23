@@ -14,8 +14,7 @@ Initial version extracted from https://github.com/Brightspace/valence-auth-serve
 **Step 1**. Implement the interface defined by `AbstractPublicKeyStore`:
 
 ```javascript
-const
-	AbstractPublicKeyStore = require('node-auth-jwks').AbstractPublicKeyStore;
+const AbstractPublicKeyStore = require('node-auth-jwks').AbstractPublicKeyStore;
 
 class RedisPublicKeyStore extends AbstractPublicKeyStore {
 	constructor (redisClient) {
@@ -36,14 +35,14 @@ class RedisPublicKeyStore extends AbstractPublicKeyStore {
 **Step 2**. Instantiate `KeyGenerator`:
 
 ```javascript
-const
-	NodeAuthJwks = require('node-auth-jwks'),
+const NodeAuthJwks = require('node-auth-jwks');
+const publicKeyStore = new RedisPublicKeyStore(...);
 
-	const keyGenerator = new NodeAuthJwks.KeyGenerator({
-		signingKeyType: 'RSA',
-		// other settings
-		publicKeyStore: new RedisPublicKeyStore(...)
-	});
+const keyGenerator = new NodeAuthJwks.KeyGenerator({
+	signingKeyType: 'RSA',
+	// other settings
+	publicKeyStore
+});
 ```
 
 **Step 3**. Expose a route for public key retrieval using a routing framework
@@ -51,14 +50,12 @@ of your choice. The route will be called by D2L Auth Service. Note that your ser
 
 ```javascript
 
-const
-	router = require('koa-router')(),
+const router = require('koa-router')();
 
 router.get('/auth/.well-known/jwks', function() {
-	return keyGenerator.getJwks()
-		.then((keys) => {
-			this.body = keys;
-		});
+	return publicKeyStore
+		.lookupPublicKeys()
+		.then(keys => this.body = { keys });
 });
 
 app.use(router.routes());
@@ -100,10 +97,10 @@ const keyGenerator = new NodeAuthJwks.KeyGenerator({
 	ec: {
 		crv: <String> // one of 'P-256', 'P-384', 'P-521'
 	},
-	
-	publicKeyStore: new RedisPublicKeyStore(...)	// A backend for storing public keys. 
+
+	publicKeyStore: new RedisPublicKeyStore(...)	// A backend for storing public keys.
 													// Can be anything: Redis, MSSQL, PostgreSQL, etc.
-													// See "node-auth-provisioning-postgresql" for 
+													// See "node-auth-provisioning-postgresql" for
 													// the PostgreSQL backed.
 });
 ```
