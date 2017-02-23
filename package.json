@@ -1,6 +1,6 @@
 {
   "name": "@d2l/node-auth-jwks",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "JSON Web Key Management Library for Node.JS services",
   "main": "src/index.js",
   "directories": {
