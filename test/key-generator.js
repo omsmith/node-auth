@@ -156,16 +156,21 @@ describe('KeyGenerator', () => {
 				dummyPublicKeyStore.storePublicKey.reset();
 				assert.strictEqual(0, dummyPublicKeyStore.storePublicKey.callCount);
 
-				keygen._generateNewKeys();
-
-				sinon.assert.calledWith(
-					dummyPublicKeyStore.storePublicKey,
-					sinon.match({
-						kty: 'RSA',
-						alg: 'RS256',
-						exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
-					})
-				);
+				return keygen
+					._generateNewKeys()
+					.then(
+						() => {
+							sinon.assert.calledWith(
+								dummyPublicKeyStore.storePublicKey,
+								sinon.match({
+									kty: 'RSA',
+									alg: 'RS256',
+									exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
+								})
+							);
+						},
+						() => assert(false)
+					);
 			});
 		});
 
@@ -179,16 +184,21 @@ describe('KeyGenerator', () => {
 				dummyPublicKeyStore.storePublicKey.reset();
 				assert.strictEqual(0, dummyPublicKeyStore.storePublicKey.callCount);
 
-				keygen._generateNewKeys();
-
-				sinon.assert.calledWith(
-					dummyPublicKeyStore.storePublicKey,
-					sinon.match({
-						kty: 'EC',
-						alg: sinon.match(/^ES\d\d\d$/),
-						exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
-					})
-				);
+				return keygen
+					._generateNewKeys()
+					.then(
+						() => {
+							sinon.assert.calledWith(
+								dummyPublicKeyStore.storePublicKey,
+								sinon.match({
+									kty: 'EC',
+									alg: sinon.match(/^ES\d\d\d$/),
+									exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
+								})
+							);
+						},
+						() => assert(false)
+					);
 			});
 		});
 
