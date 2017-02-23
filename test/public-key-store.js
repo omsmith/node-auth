@@ -17,7 +17,7 @@ describe('AbstractPublicKeyStore', () => {
 	afterEach(() => sandbox.restore());
 
 	describe('lookupPublicKeys', () => {
-		it('should return all public keys returned from the implementation, transforming old format', () => {
+		it('should return all public keys returned from the implementation', () => {
 			sandbox
 				.stub(dummyPublicKeyStore, '_lookupPublicKeys')
 				.resolves([
@@ -34,7 +34,10 @@ describe('AbstractPublicKeyStore', () => {
 						n: 'some-n-2',
 						e: 'some-e-2',
 						kid: '456',
-						pem: 'some-pem-2'
+						kty: 'RSA',
+						use: 'sig',
+						exp: 789,
+						alg: 'RS256'
 					}),
 					JSON.stringify({
 						x: 'some-x-1',
@@ -64,8 +67,8 @@ describe('AbstractPublicKeyStore', () => {
 					use: 'sig',
 					kty: 'RSA',
 					kid: '456',
+					exp: 789,
 					alg: 'RS256'
-					// unfortunately can't infer exp
 				}, {
 					x: 'some-x-1',
 					y: 'some-y-1',

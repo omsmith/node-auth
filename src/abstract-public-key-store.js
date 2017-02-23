@@ -14,27 +14,6 @@ function parseKeys(keys) {
 	return keys.map(JSON.parse);
 }
 
-function transformKeys(keys) {
-	return keys.map(transformKey);
-}
-
-function transformKey(key) {
-	if (!key.use || !key.kty) {
-		// stored from a previous version of node-auth-jwks
-		// unfortunately can't recover expiry :(
-		return {
-			n: key.n,
-			e: key.e,
-			kid: key.kid,
-			use: 'sig',
-			kty: 'RSA',
-			alg: 'RS256'
-		};
-	}
-
-	return key;
-}
-
 class AbstractPublicKeyStore {
 	constructor() {
 		assert('function' === typeof this._lookupPublicKeys, 'The function _lookupPublicKeys must be defined and return a promise');
@@ -46,8 +25,7 @@ class AbstractPublicKeyStore {
 			.resolve()
 			.then(() => this._lookupPublicKeys())
 			.then(arrayOrEmpty)
-			.then(parseKeys)
-			.then(transformKeys);
+			.then(parseKeys);
 	}
 
 	lookupPublicKey(kid) {
