@@ -48,42 +48,92 @@ describe('KeyGenerator', () => {
 	}
 
 	describe('constructor(...)', () => {
+		beforeEach(() => sandbox.stub(KeyGenerator.prototype, '_generateNewKeys'));
+
+		it('should throw if options is not an object', () => {
+			for (const val of [undefined, 'hi!', function() {}, 1000]) {
+				assert.throws(
+					() => new KeyGenerator(val),
+					TypeError,
+					/opts.+Object/
+				);
+			}
+		});
+
 		it('should throw if publicKeyStore is not an AbstractPublicKeyStore', () => {
 			assert.throws(
 				() => createKeyGenerator({ publicKeyStore: {} }),
-				assert.AssertionError
+				TypeError,
+				/publicKeyStore.+AbstractPublicKeyStore/
 			);
+		});
+
+		it('should throw if signingKeyAge is not an integer', () => {
+			for (const val of ['3600', {}, function() {}, 3600.5]) {
+				assert.throws(
+					() => createKeyGenerator({ signingKeyAge: val }),
+					TypeError,
+					/signingKeyAge.+integer/
+				);
+			}
 		});
 
 		it('should throw if signingKeyAge is negative', () => {
 			assert.throws(
 				() => createKeyGenerator({ signingKeyAge: -1 }),
-				assert.AssertionError,
+				Error,
 				/signingKeyAge/
 			);
 		});
 
-		it.skip('should throw if signingKeyAge is zero | skipped because default is used in this case, perhaps unintentionally', () => {
+		it('should throw if signingKeyAge is zero', () => {
 			assert.throws(
 				() => createKeyGenerator({ signingKeyAge: 0 }),
-				assert.AssertionError,
+				Error,
 				/signingKeyAge/
 			);
+		});
+
+		it('should throw is signingKeyAge is too large', () => {
+			assert.throws(
+				() => createKeyGenerator({ signingKeyAge: 24 * 60 * 60 + 1 }),
+				Error,
+				/signingKeyAge/
+			);
+		});
+
+		it('should throw if signingKeyOverlap is not an integer', () => {
+			for (const val of ['3000', {}, function() {}, 3000.5]) {
+				assert.throws(
+					() => createKeyGenerator({ signingKeyOverlap: val }),
+					TypeError,
+					/signingKeyOverlap.+integer/
+				);
+			}
 		});
 
 		it('should throw if signingKeyOverlap is negative', () => {
 			assert.throws(
 				() => createKeyGenerator({ signingKeyOverlap: -1 }),
-				assert.AssertionError,
+				Error,
 				/signingKeyOverlap/
 			);
 		});
 
-		it.skip('should throw if signingKeyOverlap is zero | skipped because default is used in this case, perhaps unintentionally', () => {
+		it('should throw if signingKeyOverlap is zero', () => {
 			assert.throws(
 				() => createKeyGenerator({ signingKeyOverlap: 0 }),
-				assert.AssertionError,
+				Error,
 				/signingKeyOverlap/
+			);
+		});
+
+		it('should throw is signingKeyOverlap is greater than signingKeyAge', () => {
+			createKeyGenerator({ signingKeyAge: 4000, signingKeyOverlap: 4000 });
+			assert.throws(
+				() => createKeyGenerator({ signingKeyAge: 4000, signingKeyOverlap: 4001 }),
+				Error,
+				/signingKeyOverlap.+signingKeyAge/
 			);
 		});
 
@@ -91,17 +141,13 @@ describe('KeyGenerator', () => {
 			for (const alg of ['dsa', 'rsa', 'rSA', 'eCDSA', 'foo', 1]) {
 				assert.throws(
 					() => createKeyGenerator({ signingKeyType: alg }),
-					assert.AssertionError,
+					Error,
 					/signingKeyType/
 				);
 			}
 		});
 
 		describe('RSA', () => {
-			beforeEach(() => {
-				sandbox.stub(KeyGenerator.prototype, '_generateNewKeys');
-			});
-
 			it('should check options with rsaKeygen.normalize and succeed', () => {
 				sandbox.spy(rsaKeygen, 'normalize');
 				assert.strictEqual(0, rsaKeygen.normalize.callCount);
@@ -111,10 +157,6 @@ describe('KeyGenerator', () => {
 		});
 
 		describe('EC', () => {
-			beforeEach(() => {
-				sandbox.stub(KeyGenerator.prototype, '_generateNewKeys');
-			});
-
 			it('should check options with ecKeygen.normalize and succeed', () => {
 				sandbox.spy(ecKeygen, 'normalize');
 				assert.strictEqual(0, ecKeygen.normalize.callCount);
@@ -124,10 +166,7 @@ describe('KeyGenerator', () => {
 		});
 
 		describe('should call _generateNewKeys', () => {
-			beforeEach(() => {
-				sandbox.stub(KeyGenerator.prototype, '_generateNewKeys');
-				createKeyGenerator();
-			});
+			beforeEach(() => createKeyGenerator());
 
 			it('right away', () => {
 				assert.strictEqual(1, KeyGenerator.prototype._generateNewKeys.callCount);
