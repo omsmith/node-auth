@@ -10,11 +10,14 @@ const DummyPublicKeyStore = require('./dummy-public-key-store');
 
 const dummyPublicKeyStore = new DummyPublicKeyStore();
 
-describe('AbstractPublicKeyStore', () => {
+describe.only('AbstractPublicKeyStore', () => {
+	let clock;
 	let sandbox;
 
 	beforeEach(() => sandbox = sinon.sandbox.create());
 	afterEach(() => sandbox.restore());
+	beforeEach(() => clock = sinon.useFakeTimers());
+	afterEach(() => clock.restore());
 
 	describe('lookupPublicKeys', () => {
 		it('should return all public keys returned from the implementation', () => {
@@ -77,6 +80,65 @@ describe('AbstractPublicKeyStore', () => {
 					kty: 'EC',
 					crv: 'P-384',
 					exp: 456,
+					alg: 'ES384'
+				}]), () => assert(false));
+		});
+
+		it('should filter out expired keys (even though the implementation should clear them)', () => {
+			const TIME = 100;
+			clock.tick(TIME * 1000);
+
+			sandbox
+				.stub(dummyPublicKeyStore, '_lookupPublicKeys')
+				.resolves([
+					JSON.stringify({
+						n: 'some-n-1',
+						e: 'some-e-1',
+						kid: '123',
+						kty: 'RSA',
+						use: 'sig',
+						exp: TIME,
+						alg: 'RS256'
+					}),
+					JSON.stringify({
+						n: 'some-n-2',
+						e: 'some-e-2',
+						kid: '456',
+						kty: 'RSA',
+						use: 'sig',
+						exp: TIME - 1,
+						alg: 'RS256'
+					}),
+					JSON.stringify({
+						x: 'some-x-1',
+						y: 'some-y-1',
+						kid: '789',
+						kty: 'EC',
+						crv: 'P-384',
+						use: 'sig',
+						exp: TIME + 1,
+						alg: 'ES384'
+					})
+				]);
+
+			return dummyPublicKeyStore
+				.lookupPublicKeys()
+				.then(res => assert.deepStrictEqual(res, [{
+					n: 'some-n-1',
+					e: 'some-e-1',
+					use: 'sig',
+					kty: 'RSA',
+					kid: '123',
+					exp: TIME,
+					alg: 'RS256'
+				}, {
+					x: 'some-x-1',
+					y: 'some-y-1',
+					kid: '789',
+					use: 'sig',
+					kty: 'EC',
+					crv: 'P-384',
+					exp: TIME + 1,
 					alg: 'ES384'
 				}]), () => assert(false));
 		});

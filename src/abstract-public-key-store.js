@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 
+const clock = require('./clock');
 const PublicKeyNotFoundError = require('../errors/public-key-not-found');
 
 function arrayOrEmpty(arr) {
@@ -12,6 +13,14 @@ function arrayOrEmpty(arr) {
 
 function parseKeys(keys) {
 	return keys.map(JSON.parse);
+}
+
+function filterExpiredKeys(keys) {
+	return keys.filter(isNotExpired);
+}
+
+function isNotExpired(key) {
+	return key.exp >= clock();
 }
 
 class AbstractPublicKeyStore {
@@ -25,7 +34,8 @@ class AbstractPublicKeyStore {
 			.resolve()
 			.then(() => this._lookupPublicKeys())
 			.then(arrayOrEmpty)
-			.then(parseKeys);
+			.then(parseKeys)
+			.then(filterExpiredKeys);
 	}
 
 	lookupPublicKey(kid) {

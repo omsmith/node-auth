@@ -12,9 +12,9 @@ const rsaKeygen = require('../src/rsa-key-generator');
 
 const DummyPublicKeyStore = require('./dummy-public-key-store');
 
-const
-	TEST_SIGNING_KEY_AGE = 60 * 60,
-	TEST_SIGNING_KEY_OVERLAP = 5 * 60;
+const EXPIRY_CLOCK_SKEW = 5 * 60;
+const TEST_SIGNING_KEY_AGE = 60 * 60;
+const TEST_SIGNING_KEY_OVERLAP = 5 * 60;
 
 const
 	dummyPublicKeyStore = new DummyPublicKeyStore();
@@ -204,7 +204,10 @@ describe('KeyGenerator', () => {
 								sinon.match({
 									kty: 'RSA',
 									alg: 'RS256',
-									exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
+									exp: Math.round(CURRENT_TIME_MS / 1000)
+										+ TEST_SIGNING_KEY_AGE
+										+ TEST_SIGNING_KEY_OVERLAP
+										+ EXPIRY_CLOCK_SKEW
 								})
 							);
 						},
@@ -232,7 +235,10 @@ describe('KeyGenerator', () => {
 								sinon.match({
 									kty: 'EC',
 									alg: sinon.match(/^ES\d\d\d$/),
-									exp: Math.round(CURRENT_TIME_MS / 1000) + TEST_SIGNING_KEY_AGE + TEST_SIGNING_KEY_OVERLAP
+									exp: Math.round(CURRENT_TIME_MS / 1000)
+										+ TEST_SIGNING_KEY_AGE
+										+ TEST_SIGNING_KEY_OVERLAP
+										+ EXPIRY_CLOCK_SKEW
 								})
 							);
 						},

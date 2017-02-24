@@ -3,16 +3,13 @@
 const uuid = require('uuid/v4');
 
 const AbstractPublicKeyStore = require('./abstract-public-key-store');
+const clock = require('./clock');
 const ecKeygen = require('./ec-key-generator');
 const rsaKeygen = require('./rsa-key-generator');
 
 const SIGNING_KEY_TYPE_RSA = 'RSA';
 const SIGNING_KEY_TYPE_EC = 'EC';
-
-function clock() {
-	return Math.round(Date.now() / 1000);
-}
-
+const EXPIRY_CLOCK_SKEW = 5 * 60;
 const DEFAULT_SIGNING_KEY_AGE = 60 * 60;
 const MINIMUM_SIGNING_KEY_AGE = 60 * 60;
 const MAXIMUM_SIGNING_KEY_AGE = 24 * 60 * 60;
@@ -97,7 +94,7 @@ KeyGenerator.prototype._generateNewKeys = function _generateNewKeys() {
 	this._keyGenerationTask = this
 		.keygen(uuid())
 		.then(key => {
-			key.jwk.exp = clock() + this._signingKeyAge + this._signingKeyOverlap;
+			key.jwk.exp = clock() + this._signingKeyAge + this._signingKeyOverlap + EXPIRY_CLOCK_SKEW;
 
 			return this
 				._publicKeyStore
