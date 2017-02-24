@@ -10,7 +10,7 @@ const DummyPublicKeyStore = require('./dummy-public-key-store');
 
 const dummyPublicKeyStore = new DummyPublicKeyStore();
 
-describe.only('AbstractPublicKeyStore', () => {
+describe('AbstractPublicKeyStore', () => {
 	let clock;
 	let sandbox;
 
