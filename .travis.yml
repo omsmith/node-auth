@@ -11,6 +11,7 @@ deploy:
   on:
     tags: true
     repo: Brightspace/node-auth-keys
+    node: 6
 env:
   - CXX=g++-4.8
 addons:
