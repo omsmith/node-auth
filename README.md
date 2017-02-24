@@ -22,11 +22,15 @@ class RedisPublicKeyStore extends AbstractPublicKeyStore {
 	}
 
 	_storePublicKey (key, expiry) {
-		// returns a Promise
+		// "key" is an opaque String representing the public JWK
+		// "expiry" is the "seconds since unix epoch", after which
+		// the key should not longer be returned in results
+
+		// returns a Promise, resolving after the key is successfully stored
 	}
 
 	_lookupPublicKeys() {
-		// returns a Promise wrapping all non-expired public keys
+		// returns a Promise, resolving with an Array of the stored opaque strings
 	}
 }
 ```
