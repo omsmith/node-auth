@@ -147,7 +147,9 @@ describe('KeyGenerator', () => {
 			}
 		});
 
-		describe('RSA', () => {
+		describe('RSA', /* @this */ function() {
+			this.timeout(5000);
+
 			it('should check options with rsaKeygen.normalize and succeed', () => {
 				sandbox.spy(rsaKeygen, 'normalize');
 				assert.strictEqual(0, rsaKeygen.normalize.callCount);
@@ -185,7 +187,9 @@ describe('KeyGenerator', () => {
 	describe('_generateNewKeys(...)', () => {
 		beforeEach(() => sandbox.stub(dummyPublicKeyStore, 'storePublicKey').resolves());
 
-		describe('RSA', () => {
+		describe('RSA', /* @this */ function() {
+			this.timeout(5000);
+
 			it('calls storePublicKey with public rsa jwk and proper expiry', () => {
 				const CURRENT_TIME_MS = 25000;
 				clock.tick(CURRENT_TIME_MS);

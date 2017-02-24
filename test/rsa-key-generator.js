@@ -75,7 +75,9 @@ describe('RSA', () => {
 		});
 	});
 
-	describe('keygen', () => {
+	describe('keygen', /* @this */ function() {
+		this.timeout(5000);
+
 		it('should return the signing key as "signingKey" property', () => {
 			return keygen({ signingKeySize: 2048 }, TEST_UUID)
 				.then(key => key.signingKey, () => assert(false))
