@@ -7,35 +7,77 @@ const keygen = require('../src/rsa-key-generator');
 const TEST_UUID = '1234';
 
 describe('RSA', () => {
-	describe('validate', () => {
-		it('should throw AssertionError when size is negative', () => {
+	describe('normalize', () => {
+		it('should throw TypeError when size is not a number', () => {
+			for (const size of ['cats', '2048', {}, null]) {
+				assert.throws(
+					() => keygen.normalize({ signingKeySize: size }),
+					TypeError,
+					/signingKeySize.+Number/
+				);
+			}
+		});
+
+		it('should throw TypeError when size in not an integer', () => {
 			assert.throws(
-				() => keygen.validate(-1024),
-				assert.AssertionError,
+				() => keygen.normalize({ signingKeySize: 2048.5 }),
+				TypeError,
+				/signingKeySize.+integer/
+			);
+		});
+
+		it('should throw Error when size is negative', () => {
+			assert.throws(
+				() => keygen.normalize({ signingKeySize: -1024 }),
+				Error,
 				/signingKeySize/
 			);
 		});
 
-		it('should throw AssertionError when size is zero', () => {
+		it('should throw Error when size is zero', () => {
 			assert.throws(
-				() => keygen.validate(0),
-				assert.AssertionError,
+				() => keygen.normalize({ signingKeySize: 0 }),
+				Error,
 				/signingKeySize/
 			);
 		});
 
-		it.skip('should throw AssertionError when size is less than 1024 | skipped because this isnt currently asserted', () => {
+		it('should throw Error when size is less than 2048', () => {
 			assert.throws(
-				() => keygen.validate(1023),
-				assert.AssertionError,
+				() => keygen.normalize({ signingKeySize: 1024 }),
+				Error,
 				/signingKeySize/
 			);
+			assert.throws(
+				() => keygen.normalize({ signingKeySize: 2047 }),
+				Error,
+				/signingKeySize/
+			);
+		});
+
+		it('should return normalized, new, object when valid', () => {
+			const inputOpts = { signingKeySize: 4096 };
+			const normal = keygen.normalize(inputOpts);
+			assert.strictEqual(normal.size, 4096);
+			assert.notStrictEqual(normal, inputOpts);
+		});
+
+		it('should return defaults when values not provided', () => {
+			const inputOpts = {};
+			const normal = keygen.normalize(inputOpts);
+			assert.strictEqual(normal.size, 2048);
+			assert.notStrictEqual(normal, inputOpts);
+		});
+
+		it('should return defaults when undefined', () => {
+			const normal = keygen.normalize();
+			assert.strictEqual(normal.size, 2048);
 		});
 	});
 
 	describe('keygen', () => {
 		it('should return the signing key as "signingKey" property', () => {
-			return keygen(2048, TEST_UUID)
+			return keygen({ signingKeySize: 2048 }, TEST_UUID)
 				.then(key => key.signingKey, () => assert(false))
 				.then(
 					signingKey => {
@@ -49,7 +91,7 @@ describe('RSA', () => {
 		});
 
 		it('should return a public JWK as "jwk" property with provided kid', () => {
-			return keygen(2048, TEST_UUID)
+			return keygen({ signingKeySize: 2048 }, TEST_UUID)
 				.then(key => key.jwk, () => assert(false))
 				.then(
 					jwk => {

@@ -42,7 +42,7 @@ describe('KeyGenerator', () => {
 				crv: 'P-256'
 			},
 			rsa: {
-				signingKeySize: 1024
+				signingKeySize: 2048
 			}
 		}, opts));
 	}
@@ -102,11 +102,11 @@ describe('KeyGenerator', () => {
 				sandbox.stub(KeyGenerator.prototype, '_generateNewKeys');
 			});
 
-			it('should check options with rsaKeygen.validate and succeed', () => {
-				sandbox.spy(rsaKeygen, 'validate');
-				assert.strictEqual(0, rsaKeygen.validate.callCount);
-				createKeyGenerator({ signingKeyType: 'RSA', rsa: { singingKeySize: 1024 } });
-				assert.strictEqual(1, rsaKeygen.validate.callCount);
+			it('should check options with rsaKeygen.normalize and succeed', () => {
+				sandbox.spy(rsaKeygen, 'normalize');
+				assert.strictEqual(0, rsaKeygen.normalize.callCount);
+				createKeyGenerator({ signingKeyType: 'RSA', rsa: { singingKeySize: 2048 } });
+				assert.strictEqual(1, rsaKeygen.normalize.callCount);
 			});
 		});
 
@@ -115,11 +115,11 @@ describe('KeyGenerator', () => {
 				sandbox.stub(KeyGenerator.prototype, '_generateNewKeys');
 			});
 
-			it('should check options with ecKeygen.validate and succeed', () => {
-				sandbox.spy(ecKeygen, 'validate');
-				assert.strictEqual(0, ecKeygen.validate.callCount);
+			it('should check options with ecKeygen.normalize and succeed', () => {
+				sandbox.spy(ecKeygen, 'normalize');
+				assert.strictEqual(0, ecKeygen.normalize.callCount);
 				createKeyGenerator({ signingKeyType: 'EC', ec: { crv: 'P-256' } });
-				assert.strictEqual(1, ecKeygen.validate.callCount);
+				assert.strictEqual(1, ecKeygen.normalize.callCount);
 			});
 		});
 

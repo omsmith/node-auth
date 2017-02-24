@@ -16,9 +16,7 @@ function clock() {
 
 const
 	DEFAULT_SIGNING_KEY_AGE = 60 * 60,
-	DEFAULT_SIGNING_KEY_OVERLAP = 5 * 60,
-	DEFAULT_RSA_SIGNING_KEY_SIZE = 1024,
-	DEFAULT_EC_CRV = 'P-256';
+	DEFAULT_SIGNING_KEY_OVERLAP = 5 * 60;
 
 function KeyGenerator(opts) {
 	assert(opts.publicKeyStore instanceof AbstractPublicKeyStore);
@@ -32,15 +30,11 @@ function KeyGenerator(opts) {
 
 	switch (opts.signingKeyType) {
 		case SIGNING_KEY_TYPE_RSA: {
-			const signingKeySize = opts.rsa && opts.rsa.signingKeySize || DEFAULT_RSA_SIGNING_KEY_SIZE;
-			rsaKeygen.validate(signingKeySize);
-			this.keygen = rsaKeygen.bind(null, signingKeySize);
+			this.keygen = rsaKeygen.bind(null, rsaKeygen.normalize(opts.rsa));
 			break;
 		}
 		case SIGNING_KEY_TYPE_EC: {
-			const crv = opts.ec && opts.ec.crv || DEFAULT_EC_CRV;
-			ecKeygen.validate(crv);
-			this.keygen = ecKeygen.bind(null, crv);
+			this.keygen = ecKeygen.bind(null, ecKeygen.normalize(opts.ec));
 			break;
 		}
 		default: {

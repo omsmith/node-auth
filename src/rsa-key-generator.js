@@ -1,11 +1,13 @@
 'use strict';
 
-const assert = require('assert');
 const jwkToPem = require('jwk-to-pem');
 const generate = require('native-crypto/generate');
 
-function keygen(size, kid) {
-	return generate('RS256', size)
+const DEFAULT_SIZE = 2048;
+const MINIMUM_SIZE = 2048;
+
+function keygen(opts, kid) {
+	return generate('RS256', opts.size)
 		.then(keypair => {
 			return Promise
 				.all([
@@ -33,6 +35,24 @@ function keygen(size, kid) {
 }
 
 module.exports = keygen;
-module.exports.validate = function(signingKeySize) {
-	assert(signingKeySize > 0, 'signingKeySize must be positive');
+module.exports.normalize = function normalize(opts) {
+	if (opts && typeof opts.signingKeySize !== 'undefined') {
+		const size = opts.signingKeySize;
+
+		if (typeof size !== 'number') {
+			throw new TypeError(`"opts.rsa.signingKeySize" should be a Number. Got "${typeof size}".`);
+		}
+
+		if (size !== Math.round(size)) {
+			throw new TypeError(`"opts.rsa.signingKeySize" should be an integer. Got "${size}".`);
+		}
+
+		if (size < MINIMUM_SIZE) {
+			throw new Error(`"opts.rsa.signingKeySize" must be atleast ${MINIMUM_SIZE}. Got "${size}".`);
+		}
+
+		return { size };
+	}
+
+	return { size: DEFAULT_SIZE };
 };

@@ -7,17 +7,32 @@ const keygen = require('../src/ec-key-generator');
 const TEST_UUID = '1234';
 
 describe('EC', () => {
-	describe('validate', () => {
+	describe('normalize', () => {
 		for (const crv of ['P-256', 'P-384', 'P-521']) {
-			it(`should not throw when crv is ${crv}`, () => {
-				keygen.validate(crv);
+			it(`should return new options object when crv is ${crv}`, () => {
+				const inputOpts = { crv };
+				const normal = keygen.normalize(inputOpts);
+				assert.strictEqual(normal.crv, crv);
+				assert.notStrictEqual(normal, inputOpts);
 			});
 		}
+
+		it('should return default crv when value not filled', () => {
+			const inputOpts = {};
+			const normal = keygen.normalize(inputOpts);
+			assert.strictEqual(normal.crv, 'P-256');
+			assert.notStrictEqual(normal, inputOpts);
+		});
+
+		it('should return default when options is undefied', () => {
+			const normal = keygen.normalize();
+			assert.strictEqual(normal.crv, 'P-256');
+		});
 
 		it('should throw when crv is anything else', () => {
 			for (const crv of ['P-123', 1024, 'cats']) {
 				assert.throws(
-					() => keygen.validate(crv),
+					() => keygen.normalize({ crv }),
 					Error,
 					/Unknown curve/
 				);
@@ -29,7 +44,7 @@ describe('EC', () => {
 		for (const crv of ['P-256', 'P-384', 'P-521']) {
 			describe(crv, () => {
 				it('should return the signing key as "signingKey" property', () => {
-					return keygen(crv, TEST_UUID)
+					return keygen({ crv }, TEST_UUID)
 						.then(key => key.signingKey, () => assert(false))
 						.then(
 							signingKey => {
@@ -43,7 +58,7 @@ describe('EC', () => {
 				});
 
 				it('should return a public JWK as "jwk" property with provided kid', () => {
-					return keygen(crv, TEST_UUID)
+					return keygen({ crv }, TEST_UUID)
 						.then(key => key.jwk, () => assert(false))
 						.then(
 							jwk => {
