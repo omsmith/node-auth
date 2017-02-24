@@ -1,0 +1,13 @@
+sudo: false
+language: node_js
+node_js:
+- 4
+- 6
+- 7
+deploy:
+  provider: npm
+  email: d2ltravisdeploy@d2l.com
+  api_key: "Ukc6o0l3g6M5HB07FJ2AlPd/JkdN+suOK+CWPs2SrI7JYrIAR8hovxTmQ+rrxp1qJUfV1/atWFhzrU18+CJ5Cs9ySxqhVUR5KFhrEl/5LvF9lX5rY7epF2Fd6B69NpKEmDUJ0Rq9WQZt8vquW8ONUdGBzFECQl7YIOh1DNt18Mellmr4hNFxdRUlnpFr3JPKSxgiFWeksY54WUGoCYF5+zwBfLotbkduceGZj1yos5EkGXeF+27HRRuocYWYIYwcCUpKiyBCy1ggj67q89pqXFBQfmvcFaLUEKG0sjPGtjnjBYv7n7tJ4jPSu006hmBpVv0zirY5ad2h/SSjmAlMl/FR1QKK7sZLewPmqXCgf3R/47wSv/y7a9ApLpqgqGH0Jj0SApK4QfhIiDnogWDXDLMHQZW+15PuzInNvdX1PKkShLrcwg2Hff5umgiJIt6jcnwF2SjzHDX1qDlDC0PtFhqMSxws+0c1JfCeoaBfLFaKm7aqkj5CkFcMuoJoO3MaCAg02KcM2bccG0JaIXOUEKSdBvSSNzvsMQS4rD0LBP5Y3wKvimnKnmgGKXXIPNPx5Pbjt3QYE1+Psi1Krca4jPO5GIO70BYtPamfXWtVPH5HqjwphtZsEyNnNdgzWo2UiYxG31s9XP6Bh+3espOwWuLAtUtQ8DTDRUIVDByElTc="
+  on:
+    tags: true
+    repo: Brightspace/node-auth-keys
