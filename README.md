@@ -1,20 +1,19 @@
-# node-auth-jwks
+# brightspace-auth-jwks
 
-Key generation/storage/retrieval logic.
-Initial version extracted from https://github.com/Brightspace/valence-auth-server originally written by Owen Smith.
+Library for generating, storing, and retrieving keypairs for use in
+Brightspace's auth framework.
 
-## Roadmap
-- [x] Core key generation/storage/retrieval logic
-- [x] RSA keys
-- [x] ECDSA keys
-- [ ] Continuous integration testing (TravisCI?)
+## Install
+```bash
+npm install brightspace-auth-jwks --save
+```
 
 ## Usage
 
 **Step 1**. Implement the interface defined by `AbstractPublicKeyStore`:
 
 ```javascript
-const AbstractPublicKeyStore = require('node-auth-jwks').AbstractPublicKeyStore;
+const AbstractPublicKeyStore = require('brightspace-auth-jwks').AbstractPublicKeyStore;
 
 class RedisPublicKeyStore extends AbstractPublicKeyStore {
 	constructor (redisClient) {
@@ -35,18 +34,19 @@ class RedisPublicKeyStore extends AbstractPublicKeyStore {
 **Step 2**. Instantiate `KeyGenerator`:
 
 ```javascript
-const NodeAuthJwks = require('node-auth-jwks');
+const KeyGenerator = require('brightspace-auth-jwks').KeyGenerator;
 const publicKeyStore = new RedisPublicKeyStore(...);
 
-const keyGenerator = new NodeAuthJwks.KeyGenerator({
-	signingKeyType: 'RSA',
+const keyGenerator = new KeyGenerator({
+	signingKeyType: 'EC',
 	// other settings
 	publicKeyStore
 });
 ```
 
 **Step 3**. Expose a route for public key retrieval using a routing framework
-of your choice. The route will be called by D2L Auth Service. Note that your service must be known by the Auth service (present in its DB).
+of your choice. The route will be called by D2L Auth Service. Note that your
+service must be known by the Auth service (present in its DB).
 
 ```javascript
 
@@ -67,13 +67,11 @@ router.get('/auth/jwk/:kid', function(kid) {
 app.use(router.routes());
 
 ```
-**Step 4**. Instantiate `NodeAuthProvisioner`
-(https://github.com/Brightspace/node-auth-provisioning) providing
+**Step 4**. Instantiate [AuthTokenProvisioner][AuthTokenProvisioner] providing
 `keyGenerator.getCurrentPrivateKey` as a `keyLookup` function:
 
 ```javascript
-const
-	AuthTokenProvisioner = require('@d2l/brightspace-auth-provisioning');
+const AuthTokenProvisioner = require('brightspace-auth-provisioning');
 
 const provisioner = new AuthTokenProvisioner({
 	...
@@ -86,27 +84,51 @@ Now you are able to call `provisioner.provisionToken(...)`.
 ## Supported options:
 
 ```javascript
-const keyGenerator = new NodeAuthJwks.KeyGenerator({
-	signingKeyType: 'RSA',				// A type of signing keys to generate. 'RSA' or 'EC'
-	signingKeyAge: <integer, sec>,		// For how long a generated pair of private/public keys remains active
-										// Inactive keys expire, and a new key pair is generated
-										// Default: 1 hour
-	signingKeyOverlap: <integer, sec>,	// An additional overlap period for an old public key to remain active
-										// Default: 5 mins
+const keyGenerator = new KeyGenerator({
+	signingKeyType: 'EC',				// A type of signing keys to generate. 'RSA' or 'EC'. REQUIRED
+	signingKeyAge: 3600,				// Length of time, in seconds, for a private key to remain in use
+	signingKeyOverlap: 300,				// Length of time, in seconds, for a public key to remain valid
+										// after its private key has been rotated out. This is effectively
+										// the maximum lifetime of a signed token.
 
 	// RSA-specific settings:
 	rsa: {
-		signingKeySize: <integer, bits>	// A size of an RSA key to generate. Default: 1024 bits
+		signingKeySize: 2048			// RSA key size, in bits
 	},
 
 	// EC-specific settings:
 	ec: {
-		crv: <String> // one of 'P-256', 'P-384', 'P-521'
+		crv: 'P-256'					// one of 'P-256', 'P-384', 'P-521'
 	},
 
 	publicKeyStore: new RedisPublicKeyStore(...)	// A backend for storing public keys.
 													// Can be anything: Redis, MSSQL, PostgreSQL, etc.
 													// See "node-auth-provisioning-postgresql" for
 													// the PostgreSQL backed.
+													// REQUIRED
 });
 ```
+
+## Contributing
+
+1. **Fork** the repository. Committing directly against this repository is
+   highly discouraged.
+
+2. Make your modifications in a branch, updating and writing new unit tests
+   as necessary in the `test` directory.
+
+3. Ensure that all tests pass with `npm test`
+
+4. `rebase` your changes against master. *Do not merge*.
+
+5. Submit a pull request to this repository. Wait for tests to run and someone
+   to chime in.
+
+### Code Style
+
+This repository is configured with [EditorConfig][EditorConfig] and
+[ESLint][ESLint] rules.
+
+[AuthTokenProvisioner]: https://github.com/Brightspace/node-auth-provisioning
+[EditorConfig]: http://editorconfig.org/
+[ESLint]: http://eslint.org
