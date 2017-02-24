@@ -1,11 +1,11 @@
-# brightspace-auth-jwks
+# brightspace-auth-keys
 
 Library for generating, storing, and retrieving keypairs for use in
 Brightspace's auth framework.
 
 ## Install
 ```bash
-npm install brightspace-auth-jwks --save
+npm install brightspace-auth-keys --save
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install brightspace-auth-jwks --save
 **Step 1**. Implement the interface defined by `AbstractPublicKeyStore`:
 
 ```javascript
-const AbstractPublicKeyStore = require('brightspace-auth-jwks').AbstractPublicKeyStore;
+const AbstractPublicKeyStore = require('brightspace-auth-keys').AbstractPublicKeyStore;
 
 class RedisPublicKeyStore extends AbstractPublicKeyStore {
 	constructor (redisClient) {
@@ -38,7 +38,7 @@ class RedisPublicKeyStore extends AbstractPublicKeyStore {
 **Step 2**. Instantiate `KeyGenerator`:
 
 ```javascript
-const KeyGenerator = require('brightspace-auth-jwks').KeyGenerator;
+const KeyGenerator = require('brightspace-auth-keys').KeyGenerator;
 const publicKeyStore = new RedisPublicKeyStore(...);
 
 const keyGenerator = new KeyGenerator({
@@ -107,8 +107,6 @@ const keyGenerator = new KeyGenerator({
 
 	publicKeyStore: new RedisPublicKeyStore(...)	// A backend for storing public keys.
 													// Can be anything: Redis, MSSQL, PostgreSQL, etc.
-													// See "node-auth-provisioning-postgresql" for
-													// the PostgreSQL backed.
 													// REQUIRED
 });
 ```

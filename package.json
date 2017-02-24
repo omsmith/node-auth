@@ -1,7 +1,7 @@
 {
-  "name": "@d2l/node-auth-jwks",
+  "name": "brightspace-auth-keys",
   "version": "0.2.0",
-  "description": "JSON Web Key Management Library for Node.JS services",
+  "description": "Library for generating, storing, and retrieving keypairs for use in Brightspace's auth framework.",
   "main": "src/index.js",
   "directories": {
     "test": "test"
