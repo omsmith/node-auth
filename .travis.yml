@@ -7,16 +7,17 @@ node_js:
 deploy:
   provider: npm
   email: d2ltravisdeploy@d2l.com
-  api_key: "Ukc6o0l3g6M5HB07FJ2AlPd/JkdN+suOK+CWPs2SrI7JYrIAR8hovxTmQ+rrxp1qJUfV1/atWFhzrU18+CJ5Cs9ySxqhVUR5KFhrEl/5LvF9lX5rY7epF2Fd6B69NpKEmDUJ0Rq9WQZt8vquW8ONUdGBzFECQl7YIOh1DNt18Mellmr4hNFxdRUlnpFr3JPKSxgiFWeksY54WUGoCYF5+zwBfLotbkduceGZj1yos5EkGXeF+27HRRuocYWYIYwcCUpKiyBCy1ggj67q89pqXFBQfmvcFaLUEKG0sjPGtjnjBYv7n7tJ4jPSu006hmBpVv0zirY5ad2h/SSjmAlMl/FR1QKK7sZLewPmqXCgf3R/47wSv/y7a9ApLpqgqGH0Jj0SApK4QfhIiDnogWDXDLMHQZW+15PuzInNvdX1PKkShLrcwg2Hff5umgiJIt6jcnwF2SjzHDX1qDlDC0PtFhqMSxws+0c1JfCeoaBfLFaKm7aqkj5CkFcMuoJoO3MaCAg02KcM2bccG0JaIXOUEKSdBvSSNzvsMQS4rD0LBP5Y3wKvimnKnmgGKXXIPNPx5Pbjt3QYE1+Psi1Krca4jPO5GIO70BYtPamfXWtVPH5HqjwphtZsEyNnNdgzWo2UiYxG31s9XP6Bh+3espOwWuLAtUtQ8DTDRUIVDByElTc="
+  api_key:
+    secure: HYEOT7bkbjY1TenABndiC9Ab9u4+VlRnviw33ossfAvzDJk1AF+gCp82obbMwKnPUDL31DdXgzLzQa6zMxIQ4BLKpckAcIyiHY0NNOTde77oGzufNUvnW8s1aMbddpgH2+KnDG8h+4I7++5ArFWcizRgUErjLSqQiIoM88g35Bt8hssQBDACyEovXeE1ZoUdNwiGgGTOTyutSeWyc0gZw1FuhLhkJwgbkWzTD+EPGRlxwMmLflnMMbGfjo9EzAoVqbzsVzDr77PC7z6EjGuT5AssxAzAzAMyM5QgsTQKtD0oZ4thQLe/P3dtpoUxpBT6tnzmhKj11FaNfoTLugcVu/ai/SSkXl9Ibtg2k96xEgAWm7fVjst6hi60W88xjDrHeJ6ijOVD7TWSGTEWzaKWb5HmCBY8IttXQBP6jOZk+8oH6UIPuDeyJkW9cAQKZV5YEU/1ItV9W5yOYl9gddds/igIPqX/+yuPPXPFFq5vBBnMfBwrD84LY3+yC3DlueDnaHwVi8ip/cajOTS3HzEd+eRTfkGNdUBf3axz8kKmT5/QWSxOpnaeAa0pMCj8c5GKhSoq+MFy6AZ9utrq4b0Rdpm2bOXfShTHmC2b+47sWNsP75mY/kzLx1cump6xru0+HnGmar1Bsz8BZ0An5DQhpws/TZhNFJQJ1C/ky1ckFuw=
   on:
     tags: true
     repo: Brightspace/node-auth-keys
     node: 6
 env:
-  - CXX=g++-4.8
+- CXX=g++-4.8
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
+    - g++-4.8
