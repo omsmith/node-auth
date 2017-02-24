@@ -104,6 +104,10 @@ KeyGenerator.prototype._generateNewKeys = function _generateNewKeys() {
 					this._keyGenerationTask = undefined;
 					return this._currentPrivateKey;
 				});
+		})
+		.catch(() => {
+			return new Promise(resolve => setTimeout(resolve, 100).unref())
+				.then(this._generateNewKeys);
 		});
 
 	return this._keyGenerationTask;
