@@ -4,8 +4,6 @@ const assert = require('assert');
 const sinon = require('sinon');
 const xtend = require('xtend');
 
-require('sinon-as-promised');
-
 const KeyGenerator = require('../src/key-generator');
 const ecKeygen = require('../src/ec-key-generator');
 const rsaKeygen = require('../src/rsa-key-generator');
@@ -196,7 +194,7 @@ describe('KeyGenerator', () => {
 
 				const keygen = createKeyGenerator({ signingKeyType: 'RSA' });
 				// _generateNewKeys is called immediately by the contrusctor, so reset the stub
-				dummyPublicKeyStore.storePublicKey.reset();
+				dummyPublicKeyStore.storePublicKey.resetHistory();
 				assert.strictEqual(0, dummyPublicKeyStore.storePublicKey.callCount);
 
 				return keygen
@@ -227,7 +225,7 @@ describe('KeyGenerator', () => {
 
 				const keygen = createKeyGenerator({ signingKeyType: 'EC' });
 				// _generateNewKeys is called immediately by the contrusctor, so reset the stub
-				dummyPublicKeyStore.storePublicKey.reset();
+				dummyPublicKeyStore.storePublicKey.resetHistory();
 				assert.strictEqual(0, dummyPublicKeyStore.storePublicKey.callCount);
 
 				return keygen
