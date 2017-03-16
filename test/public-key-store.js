@@ -2,7 +2,6 @@
 
 const assert = require('assert');
 const sinon = require('sinon');
-require('sinon-as-promised');
 
 const PublicKeyNotFoundError = require('../errors/public-key-not-found');
 
