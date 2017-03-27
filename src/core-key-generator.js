@@ -78,12 +78,11 @@ function parseOpts(opts) {
 function CoreKeyGenerator(opts) {
 	this._signingKeyAge = DEFAULT_SIGNING_KEY_AGE;
 	this._signingKeyOverlap = DEFAULT_SIGNING_KEY_OVERLAP;
-
 	this._publicKeyStore = null;
 	parseOpts.call(this, opts);
 }
 
-CoreKeyGenerator.prototype.generateNewKeys = function _generateNewKeys() {
+CoreKeyGenerator.prototype.generateNewKeys = function generateNewKeys() {
 	return this
 		.keygen(uuid())
 		.then(key => {

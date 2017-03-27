@@ -5,8 +5,7 @@ const sinon = require('sinon');
 const xtend = require('xtend');
 
 const KeyGenerator = require('../src/key-generator');
-const ecKeygen = require('../src/ec-key-generator');
-const rsaKeygen = require('../src/rsa-key-generator');
+const CoreKeyGenerator = require('../src/core-key-generator');
 
 const DummyPublicKeyStore = require('./dummy-public-key-store');
 
@@ -58,111 +57,9 @@ describe('KeyGenerator', () => {
 			}
 		});
 
-		it('should throw if publicKeyStore is not an AbstractPublicKeyStore', () => {
-			assert.throws(
-				() => createKeyGenerator({ publicKeyStore: {} }),
-				TypeError,
-				/publicKeyStore.+AbstractPublicKeyStore/
-			);
-		});
-
-		it('should throw if signingKeyAge is not an integer', () => {
-			for (const val of ['3600', {}, function() {}, 3600.5]) {
-				assert.throws(
-					() => createKeyGenerator({ signingKeyAge: val }),
-					TypeError,
-					/signingKeyAge.+integer/
-				);
-			}
-		});
-
-		it('should throw if signingKeyAge is negative', () => {
-			assert.throws(
-				() => createKeyGenerator({ signingKeyAge: -1 }),
-				Error,
-				/signingKeyAge/
-			);
-		});
-
-		it('should throw if signingKeyAge is zero', () => {
-			assert.throws(
-				() => createKeyGenerator({ signingKeyAge: 0 }),
-				Error,
-				/signingKeyAge/
-			);
-		});
-
-		it('should throw is signingKeyAge is too large', () => {
-			assert.throws(
-				() => createKeyGenerator({ signingKeyAge: 24 * 60 * 60 + 1 }),
-				Error,
-				/signingKeyAge/
-			);
-		});
-
-		it('should throw if signingKeyOverlap is not an integer', () => {
-			for (const val of ['3000', {}, function() {}, 3000.5]) {
-				assert.throws(
-					() => createKeyGenerator({ signingKeyOverlap: val }),
-					TypeError,
-					/signingKeyOverlap.+integer/
-				);
-			}
-		});
-
-		it('should throw if signingKeyOverlap is negative', () => {
-			assert.throws(
-				() => createKeyGenerator({ signingKeyOverlap: -1 }),
-				Error,
-				/signingKeyOverlap/
-			);
-		});
-
-		it('should throw if signingKeyOverlap is zero', () => {
-			assert.throws(
-				() => createKeyGenerator({ signingKeyOverlap: 0 }),
-				Error,
-				/signingKeyOverlap/
-			);
-		});
-
-		it('should throw is signingKeyOverlap is greater than signingKeyAge', () => {
-			createKeyGenerator({ signingKeyAge: 4000, signingKeyOverlap: 4000 });
-			assert.throws(
-				() => createKeyGenerator({ signingKeyAge: 4000, signingKeyOverlap: 4001 }),
-				Error,
-				/signingKeyOverlap.+signingKeyAge/
-			);
-		});
-
-		it('should throw if signingKeyType is invalid', () => {
-			for (const alg of ['dsa', 'rsa', 'rSA', 'eCDSA', 'foo', 1]) {
-				assert.throws(
-					() => createKeyGenerator({ signingKeyType: alg }),
-					Error,
-					/signingKeyType/
-				);
-			}
-		});
-
-		describe('RSA', /* @this */ function() {
-			this.timeout(5000);
-
-			it('should check options with rsaKeygen.normalize and succeed', () => {
-				sandbox.spy(rsaKeygen, 'normalize');
-				assert.strictEqual(0, rsaKeygen.normalize.callCount);
-				createKeyGenerator({ signingKeyType: 'RSA', rsa: { singingKeySize: 2048 } });
-				assert.strictEqual(1, rsaKeygen.normalize.callCount);
-			});
-		});
-
-		describe('EC', () => {
-			it('should check options with ecKeygen.normalize and succeed', () => {
-				sandbox.spy(ecKeygen, 'normalize');
-				assert.strictEqual(0, ecKeygen.normalize.callCount);
-				createKeyGenerator({ signingKeyType: 'EC', ec: { crv: 'P-256' } });
-				assert.strictEqual(1, ecKeygen.normalize.callCount);
-			});
+		it('instantiates CoreKeyGenerator', () => {
+			const generator = createKeyGenerator();
+			assert(generator._coreKeyGenerator instanceof CoreKeyGenerator);
 		});
 
 		describe('should call _generateNewKeys', () => {
