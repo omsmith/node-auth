@@ -10,11 +10,11 @@ describe('Scopes', function() {
 	it('should expose all scopes as $scope', function() {
 		const
 			scopeStrings = [
-					'valence:apps:manage,update',
-					'*:*:read',
-					'foo:*:delete',
-					'foo:bar:*'
-				],
+				'valence:apps:manage,update',
+				'*:*:read',
+				'foo:*:delete',
+				'foo:bar:*'
+			],
 			token = new BrightspaceAuthToken({
 				scope: scopeStrings.join(' ')
 			}, 'x.y.z');
