@@ -15,7 +15,7 @@
   "author": "D2L Corporation",
   "license": "Apache-2.0",
   "devDependencies": {
-    "eslint": "^3.16.0",
+    "eslint": "^4.4.1",
     "eslint-config-brightspace": "^0.3.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
