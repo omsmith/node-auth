@@ -1,23 +1,16 @@
 sudo: false
+dist: trusty
 language: node_js
 node_js:
 - 4
 - 6
-- 7
-deploy:
-  provider: npm
-  email: d2ltravisdeploy@d2l.com
-  api_key:
-    secure: HYEOT7bkbjY1TenABndiC9Ab9u4+VlRnviw33ossfAvzDJk1AF+gCp82obbMwKnPUDL31DdXgzLzQa6zMxIQ4BLKpckAcIyiHY0NNOTde77oGzufNUvnW8s1aMbddpgH2+KnDG8h+4I7++5ArFWcizRgUErjLSqQiIoM88g35Bt8hssQBDACyEovXeE1ZoUdNwiGgGTOTyutSeWyc0gZw1FuhLhkJwgbkWzTD+EPGRlxwMmLflnMMbGfjo9EzAoVqbzsVzDr77PC7z6EjGuT5AssxAzAzAMyM5QgsTQKtD0oZ4thQLe/P3dtpoUxpBT6tnzmhKj11FaNfoTLugcVu/ai/SSkXl9Ibtg2k96xEgAWm7fVjst6hi60W88xjDrHeJ6ijOVD7TWSGTEWzaKWb5HmCBY8IttXQBP6jOZk+8oH6UIPuDeyJkW9cAQKZV5YEU/1ItV9W5yOYl9gddds/igIPqX/+yuPPXPFFq5vBBnMfBwrD84LY3+yC3DlueDnaHwVi8ip/cajOTS3HzEd+eRTfkGNdUBf3axz8kKmT5/QWSxOpnaeAa0pMCj8c5GKhSoq+MFy6AZ9utrq4b0Rdpm2bOXfShTHmC2b+47sWNsP75mY/kzLx1cump6xru0+HnGmar1Bsz8BZ0An5DQhpws/TZhNFJQJ1C/ky1ckFuw=
-  on:
-    tags: true
-    repo: Brightspace/node-auth-keys
-    node: 6
-env:
-- CXX=g++-4.8
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
+- 8
+jobs:
+  include:
+    - stage: npm publish
+      node_js: 8
+      env:
+        - secure: OcaBOk7cZ+8KZQ10LEO27fxCQYMM3oT51WseJyqgBFo5SnXBqvIkzmgWWVRN3FdC7RoTfUDscm9LCiMb6ZKZBc/hcg+NCY4WLXKZdu0iXqlfJeUCoolAfkpiwl7GzgZ32i92rI2w49j6vd8cLRl9w9+6w1wx414rj7+ffi3sUT0rlsmuIEl6TA0VRjgMJs15yN6XbOTORlTTlv4uzStJTSX2NP6fPXya2tLhy7FEUaiCAPE3Eq3GQD7aiRBikUwcJ3VWEGjZxpamTPs1eCB6b2P20BPP/yB9DOSrrEyYY7nY6jD0qjVT69EuSrt7PUaYl1xbDkVsPNYJ04jomDIcIESYs4Wlyvi99BPiCddGIWfOBIOaeLTgAgjL4LHXWb/UzTjzYhFtxtNbePDwyu+0iVM6WRA143Wa2MPG+Y8iTma/LWm31pWwezv+Tuao9K0pIylEIZ5iYowmxX/HCpwBImLM9aIV1F8jEKZXhhMVDCWOmbRqoSo/JGqydzZoZGZnRQ7H2b5ja0fr2m/zDnSqbJqWYcZknUEK9Y4C+j+Bw9XbZB/2WB8re+v5QxzB+0o1c9RkBeA1HU5/O6QnL+N6uQGxKlTVT2IIbhsIhLQDd/p/U4VZ2XxtCqWeRNKa9KyUPmaVm7DMn2nT0aQUnRCLjcjxzP02mmnhmsXi8j7PERM=
+      script:
+        - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+        - ./bin/do-release.sh
