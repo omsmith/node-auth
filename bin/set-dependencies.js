@@ -2,12 +2,12 @@
 
 'use strict';
 
+const findRequires = require('find-requires');
 const fs = require('fs');
 const path = require('path');
 
 const topPkgDir = path.resolve(__dirname, '..');
 const topPkg = JSON.parse(fs.readFileSync(path.join(topPkgDir, 'package.json'), 'utf8'));
-const topPkgNodeModules = path.join(topPkgDir, 'node_modules');
 const definedDependencies = Object.keys(topPkg.dependencies);
 
 const pkgsDir = path.join(topPkgDir, 'packages/node_modules');
@@ -39,21 +39,28 @@ for (const pkgName of pkgNames) {
 	for (const key of Object.keys(require.cache)) {
 		delete require.cache[key];
 	}
-
 	require(mainPath);
 
-	const loadedExternalModules = Object
+	const modulesInPackage = Object
 		.keys(require.cache)
-		.filter(id => id.startsWith(topPkgNodeModules));
-	const loadedInternalModules = Object
-		.keys(require.cache)
-		.filter(id => id.startsWith(pkgsDir) && !id.startsWith(pkgDir + '/'));
+		.filter(id => id.startsWith(pkgDir + '/'));
+	const requiresInPackage = Array.prototype.concat.apply(
+		[],
+		modulesInPackage.map(m => findRequires(fs.readFileSync(m, 'utf8')))
+	);
+	const packageRequires = requiresInPackage
+		.filter(id => id[0] !== '.' && id[0] !== '/')
+		.map(id => {
+			const slash = id.indexOf('/');
+			if (slash === -1) {
+				return id;
+			}
 
-	const loadedExternalPackages = modulesToPackages(loadedExternalModules, topPkgNodeModules);
-	const loadedInternalPackages = modulesToPackages(loadedInternalModules, pkgsDir);
+			return id.slice(0, slash);
+		});
 
-	const externalDependencies = intersect(loadedExternalPackages, definedDependencies);
-	const internalDependencies = loadedInternalPackages;
+	const externalDependencies = intersect(packageRequires, definedDependencies).sort();
+	const internalDependencies = intersect(packageRequires, pkgNames).sort();
 
 	pkg.dependencies = {};
 
@@ -67,18 +74,8 @@ for (const pkgName of pkgNames) {
 	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '  ') + '\n', 'utf8');
 }
 
-function moduleToPackage(module, packagesRoot) {
-	module = module.slice(packagesRoot.length + 1);
-	module = module.slice(0, module.indexOf('/'));
-
-	return module;
-}
-
-function modulesToPackages(modules, packagesRoot) {
-	return Array.from(new Set(modules.map(m => moduleToPackage(m, packagesRoot)))).sort();
-}
-
 function intersect(a, b) {
+	a = new Set(a);
 	b = new Set(b);
-	return a.filter(x => b.has(x));
+	return Array.from(a).filter(x => b.has(x));
 }
