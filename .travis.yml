@@ -4,15 +4,6 @@ node_js:
 - 4
 - 6
 - 7
-deploy:
-  provider: npm
-  email: d2ltravisdeploy@d2l.com
-  api_key:
-    secure: HYEOT7bkbjY1TenABndiC9Ab9u4+VlRnviw33ossfAvzDJk1AF+gCp82obbMwKnPUDL31DdXgzLzQa6zMxIQ4BLKpckAcIyiHY0NNOTde77oGzufNUvnW8s1aMbddpgH2+KnDG8h+4I7++5ArFWcizRgUErjLSqQiIoM88g35Bt8hssQBDACyEovXeE1ZoUdNwiGgGTOTyutSeWyc0gZw1FuhLhkJwgbkWzTD+EPGRlxwMmLflnMMbGfjo9EzAoVqbzsVzDr77PC7z6EjGuT5AssxAzAzAMyM5QgsTQKtD0oZ4thQLe/P3dtpoUxpBT6tnzmhKj11FaNfoTLugcVu/ai/SSkXl9Ibtg2k96xEgAWm7fVjst6hi60W88xjDrHeJ6ijOVD7TWSGTEWzaKWb5HmCBY8IttXQBP6jOZk+8oH6UIPuDeyJkW9cAQKZV5YEU/1ItV9W5yOYl9gddds/igIPqX/+yuPPXPFFq5vBBnMfBwrD84LY3+yC3DlueDnaHwVi8ip/cajOTS3HzEd+eRTfkGNdUBf3axz8kKmT5/QWSxOpnaeAa0pMCj8c5GKhSoq+MFy6AZ9utrq4b0Rdpm2bOXfShTHmC2b+47sWNsP75mY/kzLx1cump6xru0+HnGmar1Bsz8BZ0An5DQhpws/TZhNFJQJ1C/ky1ckFuw=
-  on:
-    tags: true
-    repo: Brightspace/node-auth-keys
-    node: 6
 env:
 - CXX=g++-4.8
 addons:
