@@ -9,4 +9,8 @@ jobs:
   include:
     - stage: npm publish
       node_js: 8
-      script: ./bin/do-release.sh
+      env:
+        - secure: OcaBOk7cZ+8KZQ10LEO27fxCQYMM3oT51WseJyqgBFo5SnXBqvIkzmgWWVRN3FdC7RoTfUDscm9LCiMb6ZKZBc/hcg+NCY4WLXKZdu0iXqlfJeUCoolAfkpiwl7GzgZ32i92rI2w49j6vd8cLRl9w9+6w1wx414rj7+ffi3sUT0rlsmuIEl6TA0VRjgMJs15yN6XbOTORlTTlv4uzStJTSX2NP6fPXya2tLhy7FEUaiCAPE3Eq3GQD7aiRBikUwcJ3VWEGjZxpamTPs1eCB6b2P20BPP/yB9DOSrrEyYY7nY6jD0qjVT69EuSrt7PUaYl1xbDkVsPNYJ04jomDIcIESYs4Wlyvi99BPiCddGIWfOBIOaeLTgAgjL4LHXWb/UzTjzYhFtxtNbePDwyu+0iVM6WRA143Wa2MPG+Y8iTma/LWm31pWwezv+Tuao9K0pIylEIZ5iYowmxX/HCpwBImLM9aIV1F8jEKZXhhMVDCWOmbRqoSo/JGqydzZoZGZnRQ7H2b5ja0fr2m/zDnSqbJqWYcZknUEK9Y4C+j+Bw9XbZB/2WB8re+v5QxzB+0o1c9RkBeA1HU5/O6QnL+N6uQGxKlTVT2IIbhsIhLQDd/p/U4VZ2XxtCqWeRNKa9KyUPmaVm7DMn2nT0aQUnRCLjcjxzP02mmnhmsXi8j7PERM=
+      script:
+        - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+        - ./bin/do-release.sh
