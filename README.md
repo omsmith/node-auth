@@ -15,6 +15,7 @@ This repository is a collection of packages relating to Brightspace's OAuth2 fra
 ### `AbstractPublicKeyStore` Implementations
 
 * [redis](packages/node_modules/brightspace-auth-keys-redis-store)
+* [dynamodb](packages/node_modules/brightspace-auth-keys-dynamodb-store)
 
 ## Testing
 

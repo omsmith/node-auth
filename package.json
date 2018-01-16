@@ -23,9 +23,11 @@
     "xtend": "^4.0.1"
   },
   "devDependencies": {
+    "aws-sdk": "^2.179.0",
     "chai": "^4.1.1",
     "chai-as-promised": "^7.1.1",
     "co-mocha": "^1.2.1",
+    "dynamodb-local": "^0.0.18",
     "eslint": "^4.4.1",
     "eslint-config-brightspace": "^0.4.0",
     "find-requires": "^0.2.3",
