@@ -8,7 +8,7 @@ This repository is a collection of packages relating to brightspace-auth-keys.
 
 * [brightspace-auth-keys](packages/node_modules/brightspace-auth-keys)
 
-### `AbstractPublicKeyStoreImplementations`
+### `AbstractPublicKeyStore` Implementations
 
 * [redis](packages/node_modules/brightspace-auth-keys-redis-store)
 
