@@ -5,6 +5,7 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
+    "postinstall": "./bin/install-independent-package-dependencies.sh",
     "check-style": "eslint .",
     "test-all": "./bin/test-all.sh",
     "pretest": "npm run check-style",
@@ -22,7 +23,6 @@
     "find-requires": "^0.2.3",
     "istanbul": "^0.4.5",
     "mocha": "^3.5.0",
-    "redis": "^2.8.0",
     "sinon": "^3.2.0",
     "xtend": "^4.0.1"
   }
