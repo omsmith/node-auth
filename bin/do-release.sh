@@ -2,6 +2,8 @@
 
 set -e
 
+source "$(dirname ${BASH_SOURCE[0]})/helpers.sh"
+
 if [ "${TRAVIS_REPO_SLUG}" != "Brightspace/node-auth-keys" ]; then
 	echo "Not building on Brightspace/node-auth-keys. Skipping..."
 	exit 0
@@ -14,12 +16,8 @@ fi
 
 ./bin/set-dependencies.js
 
-for package in packages/node_modules/*/; do
-	package=$(readlink -f "${package}")
-
-	if [ ! -d "${package}" ]; then
-		continue
-	elif [ "true" = $(node --eval "console.log(require('${package}/package.json').private)") ]; then
+for package in $(get_packages); do
+	if [ "true" = $(node --eval "console.log(require('${package}/package.json').private)") ]; then
 		continue
 	fi
 

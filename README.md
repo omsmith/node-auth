@@ -10,6 +10,8 @@ This repository is a collection of packages relating to brightspace-auth-keys.
 
 ### `AbstractPublicKeyStoreImplementations`
 
+* [redis](packages/node_modules/brightspace-auth-keys-redis-store)
+
 ## Testing
 
 ```bash
