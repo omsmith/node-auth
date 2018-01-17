@@ -4,6 +4,7 @@
 
 const findRequires = require('find-requires');
 const fs = require('fs');
+const isBuiltin = require('is-builtin-module');
 const path = require('path');
 
 const topPkgDir = path.resolve(__dirname, '..');
@@ -48,19 +49,27 @@ for (const pkgName of pkgNames) {
 		[],
 		modulesInPackage.map(m => findRequires(fs.readFileSync(m, 'utf8')))
 	);
-	const packageRequires = requiresInPackage
-		.filter(id => id[0] !== '.' && id[0] !== '/')
-		.map(id => {
-			const slash = id.indexOf('/');
-			if (slash === -1) {
-				return id;
-			}
+	const packageRequires = Array.from(new Set(
+		requiresInPackage
+			.filter(id => id[0] !== '.' && id[0] !== '/')
+			.map(id => {
+				const slash = id.indexOf('/');
+				if (slash === -1) {
+					return id;
+				}
 
-			return id.slice(0, slash);
-		});
+				return id.slice(0, slash);
+			})
+			.filter(id => !isBuiltin(id))
+	));
 
 	const externalDependencies = intersect(packageRequires, definedDependencies).sort();
 	const internalDependencies = intersect(packageRequires, pkgNames).sort();
+
+	if (packageRequires.length !== externalDependencies.length + internalDependencies.length) {
+		const missing = complement(packageRequires, externalDependencies.concat(internalDependencies));
+		throw new Error(`Missing dependency definition(s) for "${pkg.name}"!\n    MISSING DEFINTION(S): ${missing}`);
+	}
 
 	pkg.dependencies = {};
 
@@ -71,7 +80,15 @@ for (const pkgName of pkgNames) {
 		pkg.dependencies[dep] = topPkg.version;
 	}
 
-	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '  ') + '\n', 'utf8');
+	if (process.argv.indexOf('--dry-run') === -1) {
+		fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '  ') + '\n', 'utf8');
+	}
+}
+
+function complement(u, a) {
+	u = new Set(u);
+	a = new Set(a);
+	return Array.from(u).filter(x => !a.has(x));
 }
 
 function intersect(a, b) {
