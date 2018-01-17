@@ -5,7 +5,6 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "postinstall": "./bin/install-independent-package-dependencies.sh",
     "check-deps": "./bin/set-dependencies.js --dry-run",
     "check-style": "eslint .",
     "test-all": "./bin/test-all.sh",
@@ -37,6 +36,7 @@
     "nock": "^9.1.6",
     "node-rsa": "^0.4.2",
     "nyc": "^11.4.1",
+    "redis": "^2.8.0",
     "rsa-pem-to-jwk": "^1.1.3",
     "sinon": "^3.2.0"
   }
