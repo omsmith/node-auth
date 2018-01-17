@@ -80,7 +80,9 @@ for (const pkgName of pkgNames) {
 		pkg.dependencies[dep] = topPkg.version;
 	}
 
-	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '  ') + '\n', 'utf8');
+	if (process.argv.indexOf('--dry-run') === -1) {
+		fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '  ') + '\n', 'utf8');
+	}
 }
 
 function complement(u, a) {

@@ -6,10 +6,11 @@
   "private": true,
   "scripts": {
     "postinstall": "./bin/install-independent-package-dependencies.sh",
+    "check-deps": "./bin/set-dependencies.js --dry-run",
     "check-style": "eslint .",
     "test-all": "./bin/test-all.sh",
     "pretest": "npm run check-style",
-    "test": "npm run test-all"
+    "test": "npm run check-deps && npm run test-all"
   },
   "dependencies": {
     "bluebird": "^3.5.1",
