@@ -19,7 +19,8 @@
     "native-crypto": "^1.7.2",
     "promised-method": "^1.0.0",
     "superagent": "^3.8.2",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "xtend": "^4.0.1"
   },
   "devDependencies": {
     "chai": "^4.1.1",
@@ -35,7 +36,6 @@
     "node-rsa": "^0.4.2",
     "nyc": "^11.4.1",
     "rsa-pem-to-jwk": "^1.1.3",
-    "sinon": "^3.2.0",
-    "xtend": "^4.0.1"
+    "sinon": "^3.2.0"
   }
 }
