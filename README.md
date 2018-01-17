@@ -1,12 +1,16 @@
 # brightspace-auth-keys (monorepo)
 
-[![Build Status](https://travis-ci.org/Brightspace/node-auth-keys.svg?branch=master)](https://travis-ci.org/Brightspace/node-auth-keys)
+[![Build Status](https://travis-ci.org/Brightspace/node-auth.svg?branch=master)](https://travis-ci.org/Brightspace/node-auth)
 
-This repository is a collection of packages relating to brightspace-auth-keys.
+This repository is a collection of packages relating to Brightspace's OAuth2 framework.
 
 ## Packages
 
+* [brightspace-auth-assertions](pacakges/node_modules/brightspace-auth-assertions)
 * [brightspace-auth-keys](packages/node_modules/brightspace-auth-keys)
+* [brightspace-auth-provisioning](packages/node_modules/brightspace-auth-provisioning)
+* [brightspace-auth-token](packages/node_modules/brightspace-auth-token)
+* [brightspace-auth-validation](packages/node_modules/brightspace-auth-validation)
 
 ### `AbstractPublicKeyStore` Implementations
 
