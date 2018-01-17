@@ -4,8 +4,8 @@ set -e
 
 source "$(dirname ${BASH_SOURCE[0]})/helpers.sh"
 
-if [ "${TRAVIS_REPO_SLUG}" != "Brightspace/node-auth-keys" ]; then
-	echo "Not building on Brightspace/node-auth-keys. Skipping..."
+if [ "${TRAVIS_REPO_SLUG}" != "Brightspace/node-auth" ]; then
+	echo "Not building on Brightspace/node-auth. Skipping..."
 	exit 0
 fi
 
