@@ -1,4 +1,4 @@
-# brightspace-auth-keys (monorepo)
+# brightspace-auth (monorepo)
 
 [![Build Status](https://travis-ci.org/Brightspace/node-auth.svg?branch=master)](https://travis-ci.org/Brightspace/node-auth)
 
