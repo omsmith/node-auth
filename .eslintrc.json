@@ -1,6 +1,3 @@
 {
-    "extends": "brightspace/node-config",
-    "env": {
-        "mocha":true
-    }
+    "extends": "brightspace/node-config"
 }
