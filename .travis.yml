@@ -13,6 +13,10 @@ stages:
   - name: npm publish
     if: tag =~ ^v
 
+before_install:
+  # update npm on node 4, which installs/makes assertions on peerDependencies
+  - if [[ `npm -v` = 2* ]]; then npm i -g npm@latest; fi
+
 jobs:
   include:
     - stage: npm publish
