@@ -76,8 +76,13 @@ for (const pkgName of pkgNames) {
 	for (const dep of externalDependencies) {
 		pkg.dependencies[dep] = topPkg.dependencies[dep];
 	}
-	for (const dep of internalDependencies) {
-		pkg.dependencies[dep] = topPkg.version;
+
+	for (const dep of pkgNames) {
+		if (pkg.peerDependencies && pkg.peerDependencies[dep] !== undefined) {
+			pkg.peerDependencies[dep] = topPkg.version;
+		} else if (internalDependencies.indexOf(dep) !== -1) {
+			pkg.dependencies[dep] = topPkg.version;
+		}
 	}
 
 	if (process.argv.indexOf('--dry-run') === -1) {
