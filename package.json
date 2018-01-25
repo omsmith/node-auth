@@ -3,6 +3,14 @@
   "version": "2.0.0-prerelease",
   "author": "D2L Corporation",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Brightspace/node-auth.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Brightspace/node-auth/issues"
+  },
+  "homepage": "https://github.com/Brightspace/node-auth#readme",
   "private": true,
   "scripts": {
     "check-deps": "./bin/set-dependencies.js --dry-run",

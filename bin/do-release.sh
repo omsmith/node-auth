@@ -14,6 +14,7 @@ if [ -z "${TRAVIS_TAG}" ]; then
 	exit 0
 fi
 
+./bin/copy-meta.js
 ./bin/set-dependencies.js
 
 for package in $(get_packages); do
