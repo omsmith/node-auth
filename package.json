@@ -20,7 +20,6 @@
     "test": "npm run check-deps && npm run test-all"
   },
   "dependencies": {
-    "bluebird": "^3.5.1",
     "jwk-allowed-algorithms": "^1.0.0",
     "jwk-to-pem": "^1.2.6",
     "jws": "^3.1.4",
