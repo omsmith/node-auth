@@ -39,7 +39,6 @@
     "eslint-config-brightspace": "^0.4.0",
     "find-requires": "^0.2.3",
     "is-builtin-module": "^2.0.0",
-    "istanbul": "^0.4.5",
     "jsonwebtoken": "^8.1.0",
     "mocha": "^5.0.0",
     "nock": "^9.1.6",
@@ -47,6 +46,7 @@
     "nyc": "^11.4.1",
     "redis": "^2.8.0",
     "rsa-pem-to-jwk": "^1.1.3",
-    "sinon": "^4.1.6"
+    "sinon": "^4.1.6",
+    "source-map-support": "^0.5.3"
   }
 }
