@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "jwk-allowed-algorithms": "^1.0.0",
-    "jwk-to-pem": "^1.2.6",
+    "jwk-to-pem": "^2.0.0",
     "jws": "^3.1.4",
     "native-crypto": "^1.7.2",
     "promised-method": "^1.0.0",
