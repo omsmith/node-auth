@@ -10,7 +10,8 @@ const COMMON_META = [
 	'bugs',
 	'homepage',
 	'license',
-	'repository'
+	'repository',
+	'engines'
 ];
 
 const topPkgDir = path.resolve(__dirname, '..');

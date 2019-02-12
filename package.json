@@ -11,6 +11,9 @@
     "url": "https://github.com/Brightspace/node-auth/issues"
   },
   "homepage": "https://github.com/Brightspace/node-auth#readme",
+  "engines": {
+    "node": ">=10.12.0"
+  },
   "private": true,
   "scripts": {
     "check-deps": "./bin/set-dependencies.js --dry-run",
