@@ -2,10 +2,11 @@
 
 'use strict';
 
-const findRequires = require('find-requires');
 const fs = require('fs');
-const isBuiltin = require('is-builtin-module');
 const path = require('path');
+
+const findRequires = require('find-requires');
+const isBuiltin = require('is-builtin-module');
 
 const topPkgDir = path.resolve(__dirname, '..');
 const topPkg = JSON.parse(fs.readFileSync(path.join(topPkgDir, 'package.json'), 'utf8'));
