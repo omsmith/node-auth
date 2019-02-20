@@ -24,10 +24,10 @@
     "report-cov": "lcov-result-merger 'coverage/**/lcov.info' | coveralls"
   },
   "dependencies": {
+    "@trust/keyto": "^0.3.5",
     "jwk-allowed-algorithms": "^1.0.0",
     "jwk-to-pem": "^2.0.0",
     "jws": "^3.1.4",
-    "pem2jwk": "^1.0.1",
     "superagent": "^4.1.0",
     "uuid": "^3.1.0"
   },
