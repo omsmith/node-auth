@@ -29,8 +29,7 @@
     "jws": "^3.1.4",
     "pem2jwk": "^1.0.1",
     "superagent": "^4.1.0",
-    "uuid": "^3.1.0",
-    "xtend": "^4.0.1"
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "aws-sdk": "^2.179.0",
