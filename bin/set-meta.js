@@ -26,8 +26,11 @@ for (const pkgName of pkgNames) {
 	const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
 
 	for (const field of COMMON_META) {
-		pkg[field] = topPkg[field];
+		pkg[field] = JSON.parse(JSON.stringify(topPkg[field]));
 	}
+
+	// https://github.com/npm/rfcs/pull/19
+	pkg.repository.directory = path.relative(topPkgDir, pkgDir);
 
 	fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '  ') + '\n', 'utf8');
 }
