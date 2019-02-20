@@ -54,9 +54,18 @@ for (const pkgName of pkgNames) {
 		requiresInPackage
 			.filter(id => id[0] !== '.' && id[0] !== '/')
 			.map(id => {
-				const slash = id.indexOf('/');
+				let slash = id.indexOf('/');
 				if (slash === -1) {
 					return id;
+				}
+
+				// scoped packages
+				if (id[0] === '@') {
+					slash = id.indexOf('/', slash + 1);
+
+					if (slash === -1) {
+						return id;
+					}
 				}
 
 				return id.slice(0, slash);
